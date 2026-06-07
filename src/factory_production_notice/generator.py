@@ -231,41 +231,147 @@ def render_html(notice: ProductionNotice) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{esc(notice.notice_id)} Production Notice</title>
   <style>
-    body {{ font-family: Arial, sans-serif; margin: 32px; color: #172033; background: #f7f9fc; }}
-    main {{ max-width: 1040px; margin: 0 auto; background: white; border: 1px solid #d9e0ea; padding: 28px; }}
-    h1 {{ margin: 0 0 18px; font-size: 28px; }}
-    h2 {{ margin-top: 28px; font-size: 18px; border-bottom: 2px solid #d9e0ea; padding-bottom: 6px; }}
+    :root {{
+      --ink: #172033;
+      --muted: #607086;
+      --line: #ccd6e2;
+      --blue: #183a5a;
+      --paper: #ffffff;
+      --soft: #eef3f8;
+      --green: #2f7d5c;
+      --amber: #a86613;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      padding: 32px;
+      color: var(--ink);
+      background: #edf2f6;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+    }}
+    main {{
+      max-width: 1180px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 48px rgba(23, 32, 51, .12);
+    }}
+    header {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      padding: 24px 30px;
+      color: white;
+      background: linear-gradient(135deg, #14253a, #1d5274);
+    }}
+    h1 {{ margin: 0; font-size: 34px; letter-spacing: 0; }}
+    .subtitle {{ margin-top: 8px; color: #cfe0ee; }}
+    .status {{
+      display: grid;
+      gap: 8px;
+      min-width: 220px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.28);
+      background: rgba(255,255,255,.08);
+    }}
+    .status strong {{ font-size: 24px; color: #fff; }}
+    .content {{ padding: 28px 30px 32px; }}
     .grid {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }}
-    .field {{ border: 1px solid #d9e0ea; padding: 10px; }}
-    .label {{ color: #526070; font-size: 12px; text-transform: uppercase; }}
-    table {{ width: 100%; border-collapse: collapse; margin-top: 8px; }}
-    th, td {{ border: 1px solid #d9e0ea; padding: 8px; text-align: left; vertical-align: top; }}
-    th {{ background: #eef3f8; }}
-    @media (max-width: 720px) {{ .grid {{ grid-template-columns: 1fr; }} body {{ margin: 12px; }} }}
+    .field {{ border: 1px solid var(--line); padding: 12px; background: #fbfdff; min-height: 74px; }}
+    .label {{ color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }}
+    .value {{ margin-top: 8px; font-size: 16px; font-weight: 700; }}
+    h2 {{
+      margin: 28px 0 10px;
+      padding: 10px 12px;
+      color: #1b3149;
+      background: var(--soft);
+      border-left: 5px solid #346a92;
+      font-size: 18px;
+    }}
+    table {{ width: 100%; border-collapse: collapse; }}
+    th, td {{ border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }}
+    th {{ background: #f5f8fb; color: #35445a; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }}
+    .two {{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }}
+    .panel {{ border: 1px solid var(--line); padding: 14px; background: #fbfdff; min-height: 130px; }}
+    .panel p {{ margin: 8px 0; color: var(--muted); line-height: 1.55; }}
+    ul {{ margin: 8px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.65; }}
+    .approval {{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }}
+    .stamp {{
+      min-height: 74px;
+      border: 1px dashed #aab6c5;
+      padding: 10px;
+      color: var(--muted);
+      background: #fafcff;
+    }}
+    @media (max-width: 860px) {{
+      body {{ padding: 12px; }}
+      header, .two, .grid, .approval {{ grid-template-columns: 1fr; }}
+      .status {{ min-width: 0; }}
+    }}
   </style>
 </head>
 <body>
   <main>
-    <h1>Production Notice</h1>
-    <section class="grid">
-      {field("Notice ID", notice.notice_id)}
-      {field("Work Order", notice.work_order)}
-      {field("Customer", notice.customer)}
-      {field("Due Date", notice.due_date)}
-      {field("Product", notice.product.name)}
-      {field("Item Code", notice.product.item_code)}
-      {field("Quantity", f"{notice.quantity:g}")}
-      {field("Priority", notice.priority)}
-    </section>
-    <h2>Material Requirement</h2>
-    <table><thead><tr><th>Item Code</th><th>Material</th><th>Qty / Unit</th><th>Order Qty</th><th>Unit</th><th>Source</th></tr></thead><tbody>{material_rows}</tbody></table>
-    <h2>Process Routing</h2>
-    <table><thead><tr><th>Step</th><th>Work Center</th><th>Description</th><th>Cycle Time Sec</th></tr></thead><tbody>{routing_rows}</tbody></table>
-    <h2>Packaging and Quality</h2>
-    <p><strong>Packaging:</strong> {esc(str(notice.packaging.get("method", "")))}; {esc(str(notice.packaging.get("label_rule", "")))}</p>
-    <p><strong>Quality:</strong> {esc(str(notice.quality.get("sampling_rule", "")))}; {esc(checks)}</p>
-    <h2>Release Notes</h2>
-    <ul>{notes}</ul>
+    <header>
+      <div>
+        <h1>Production Notice</h1>
+        <div class="subtitle">Manufacturing release sheet / work order coordination</div>
+      </div>
+      <div class="status">
+        <span>Priority</span>
+        <strong>{esc(notice.priority.upper())}</strong>
+        <span>Due {esc(notice.due_date)}</span>
+      </div>
+    </header>
+    <div class="content">
+      <section class="grid">
+        {field("Notice ID", notice.notice_id)}
+        {field("Work Order", notice.work_order)}
+        {field("Customer", notice.customer)}
+        {field("Issuer", notice.issuer)}
+        {field("Product", notice.product.name)}
+        {field("Item Code", notice.product.item_code)}
+        {field("Model / Revision", f"{notice.product.model} / {notice.product.revision}")}
+        {field("Quantity", f"{notice.quantity:g} pcs")}
+      </section>
+      <h2>Material Requirement</h2>
+      <table><thead><tr><th>Item Code</th><th>Material</th><th>Qty / Unit</th><th>Order Qty</th><th>Unit</th><th>Source</th></tr></thead><tbody>{material_rows}</tbody></table>
+      <h2>Process Routing</h2>
+      <table><thead><tr><th>Step</th><th>Work Center</th><th>Description</th><th>Cycle Time Sec</th></tr></thead><tbody>{routing_rows}</tbody></table>
+      <section class="two">
+        <div>
+          <h2>Packaging</h2>
+          <div class="panel">
+            <p><strong>Method:</strong> {esc(str(notice.packaging.get("method", "")))}</p>
+            <p><strong>Carton:</strong> {esc(str(notice.packaging.get("units_per_carton", "")))} units / carton</p>
+            <p><strong>Pallet:</strong> {esc(str(notice.packaging.get("cartons_per_pallet", "")))} cartons / pallet</p>
+            <p><strong>Label:</strong> {esc(str(notice.packaging.get("label_rule", "")))}</p>
+          </div>
+        </div>
+        <div>
+          <h2>Quality</h2>
+          <div class="panel">
+            <p><strong>First Piece:</strong> {esc(str(notice.quality.get("first_piece_required", "")))}</p>
+            <p><strong>Sampling:</strong> {esc(str(notice.quality.get("sampling_rule", "")))}</p>
+            <p><strong>Checks:</strong> {esc(checks)}</p>
+          </div>
+        </div>
+      </section>
+      <h2>Release Notes</h2>
+      <ul>{notes}</ul>
+      <section class="approval">
+        <div class="stamp">Planning</div>
+        <div class="stamp">Production</div>
+        <div class="stamp">Quality</div>
+        <div class="stamp">Warehouse</div>
+      </section>
+    </div>
   </main>
 </body>
 </html>
@@ -273,7 +379,7 @@ def render_html(notice: ProductionNotice) -> str:
 
 
 def field(label: str, value: str) -> str:
-    return f'<div class="field"><div class="label">{esc(label)}</div><div>{esc(str(value))}</div></div>'
+    return f'<div class="field"><div class="label">{esc(label)}</div><div class="value">{esc(str(value))}</div></div>'
 
 
 def esc(value: str) -> str:

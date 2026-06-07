@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Factory Production Notice Agent Contract</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #647082;
+      --line: #d8e1eb;
+      --blue: #1d4e6d;
+      --paper: #ffffff;
+      --bg: #f5f8fb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 34px;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 46px rgba(23,32,51,.12);
+    }
+    header {
+      padding: 28px 32px;
+      color: white;
+      background: linear-gradient(135deg, #13283c, #1d4e6d);
+    }
+    h1 { margin: 0; font-size: 34px; letter-spacing: 0; }
+    .sub { margin-top: 10px; color: #d5e3ef; font-size: 17px; }
+    .content { padding: 28px 32px 34px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      padding: 16px;
+      min-height: 126px;
+    }
+    .label { color: var(--muted); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .value { margin-top: 10px; font-size: 18px; font-weight: 800; }
+    .desc { margin-top: 8px; color: var(--muted); line-height: 1.55; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid var(--line); padding: 11px; text-align: left; vertical-align: top; }
+    th { background: #eef4f8; color: #35445a; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    code {
+      display: block;
+      padding: 14px;
+      color: #dce8f4;
+      background: #111b29;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    @media (max-width: 820px) { body { padding: 12px; } .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Automation Contract</h1>
+      <div class="sub">CLI, local API, workflow files, and downstream context share one production notice request.</div>
+    </header>
+    <div class="content">
+      <section class="grid">
+        <div class="card">
+          <div class="label">Input</div>
+          <div class="value">ProductionNoticeRequest</div>
+          <div class="desc">Order, product, material, routing, packaging, and quality fields.</div>
+        </div>
+        <div class="card">
+          <div class="label">Output</div>
+          <div class="value">Workbook + Preview</div>
+          <div class="desc">Excel notice, browser preview, manifest, and agent context.</div>
+        </div>
+        <div class="card">
+          <div class="label">Interfaces</div>
+          <div class="value">CLI + HTTP</div>
+          <div class="desc">Command-line execution and local JSON API use the same schema.</div>
+        </div>
+      </section>
+      <table>
+        <thead><tr><th>Capability</th><th>Command / Endpoint</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Generate Notice</td><td><code>python -m factory_production_notice.cli generate --input sample_data/demo_notice_request.json --output output</code></td><td>Excel notice, HTML preview, manifest, context</td></tr>
+          <tr><td>Agent Spec</td><td><code>python -m factory_production_notice.cli agent-spec --output output/agent_interface.json</code></td><td>Machine-readable capability contract</td></tr>
+          <tr><td>Local API</td><td><code>POST /api/generate-notice</code></td><td>Generated artifacts from a JSON request</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,32 +1,31 @@
 # Factory Production Notice Agent
 
-A small local-first toolkit for generating production notice workbooks from
-structured manufacturing requests.
+工厂生产通知单自动化工具
 
-The project is designed for factories that still coordinate production release
-through spreadsheet-like templates. It turns a standard JSON request into a
-styled Excel notice, an HTML preview, a manifest, and a structured context file
-that another agent can inspect without reading project internals.
+![Production notice output](docs/assets/screenshots/notice-output.png)
 
-## Highlights
+## English
 
-- Generates production notice workbooks without keeping large template copies.
-- Uses synthetic demo data only, suitable for public GitHub presentation.
-- Produces Excel, HTML preview, manifest, and agent context artifacts.
-- Provides a machine-readable agent interface for external automation tools.
-- Exposes a small local HTTP API for agent-to-tool integration demos.
-- Keeps production BOM files, generated notices, packaged executables, and
-  workstation history outside the repository.
+A local-first manufacturing workflow tool that turns a structured work-order
+request into a production notice workbook, browser preview, release manifest,
+and downstream automation context.
 
-## Visual Overview
+It is built around a stable notice contract: upstream systems provide order,
+product, material, routing, packaging, and quality data; the generator owns the
+layout, workbook output, preview page, and review-ready artifacts.
 
-![Notice preview](docs/assets/notice-preview.svg)
+![Agent contract](docs/assets/screenshots/agent-contract.png)
 
-![Workflow](docs/assets/workflow.svg)
+### What It Shows
 
-![Agent interface](docs/assets/agent-interface.svg)
+- Production notice generation from a normalized manufacturing request.
+- Excel workbook and browser preview output from the same payload.
+- Material requirement expansion by order quantity.
+- Process routing, packaging, quality, release notes, and approval zones.
+- CLI and local HTTP interfaces for workflow automation.
+- Agent-readable context for review, reporting, and orchestration.
 
-## Quick Start
+### Run
 
 ```powershell
 py -m venv .venv
@@ -35,55 +34,23 @@ py -m venv .venv
 .\.venv\Scripts\python -m factory_production_notice.cli run-demo --output output
 ```
 
-If `py` is not available, use `python` instead.
-
 Open the generated preview:
 
 ```powershell
 start output\PN-2026-DEMO-001-FG-AXLE-1001.html
 ```
 
-For a Windows one-command demo:
-
-```powershell
-.\scripts\run_demo.cmd
-```
-
-## Generate From JSON
+### Generate From JSON
 
 ```powershell
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```
 
-The input contract is documented in:
-
-```text
-config/notice_schema.json
-sample_data/demo_notice_request.json
-```
-
-## Agent Interface
-
-Write the machine-readable project contract:
-
-```powershell
-python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
-```
-
-Export structured context for a downstream planning, review, or reporting
-assistant:
-
-```powershell
-python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
-```
-
-Run a local JSON API:
+### Local API
 
 ```powershell
 python -m factory_production_notice.cli serve --host 127.0.0.1 --port 8765 --output output
 ```
-
-Available API paths:
 
 ```text
 GET  /health
@@ -91,64 +58,90 @@ GET  /agent-interface
 POST /api/generate-notice
 ```
 
-## Bilingual Showcase
+### Agent Contract
 
-Open the overview page:
+```powershell
+python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
+python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
+```
+
+### Structure
+
+```text
+factory-production-notice-agent/
+  agent_interface.json
+  config/
+  docs/
+  sample_data/
+  scripts/
+  skills/
+  src/factory_production_notice/
+  tests/
+  workflows/
+```
+
+## 中文
+
+这是一个面向制造现场的生产通知单自动化工具。它把结构化工单请求转换成
+Excel 生产通知单、浏览器预览、发布清单和可供下游自动化流程读取的上下文。
+
+项目核心是一份稳定的通知单契约：上游系统提供订单、产品、物料、工艺路线、
+包装和质检数据，生成器负责版式、工作簿、预览页面和待审核交付物。
+
+### 展示能力
+
+- 从标准制造请求生成生产通知单。
+- 同一份数据同时输出 Excel 工作簿和网页预览。
+- 按生产数量展开物料需求。
+- 覆盖工艺路线、包装、质检、发布备注和审批区。
+- 提供命令行和本地 HTTP 接口。
+- 输出可被 Agent 读取的结构化上下文，用于审核、报告和编排。
+
+### 快速运行
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python -m pip install -e .
+.\.venv\Scripts\python -m factory_production_notice.cli run-demo --output output
+```
+
+打开生成结果：
+
+```powershell
+start output\PN-2026-DEMO-001-FG-AXLE-1001.html
+```
+
+### 从 JSON 生成通知单
+
+```powershell
+python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
+```
+
+### 本地接口
+
+```powershell
+python -m factory_production_notice.cli serve --host 127.0.0.1 --port 8765 --output output
+```
+
+```text
+GET  /health
+GET  /agent-interface
+POST /api/generate-notice
+```
+
+### 自动化契约
+
+```powershell
+python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
+python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
+```
+
+## Showcase
 
 ```powershell
 start docs\showcase.html
 ```
-
-## Project Structure
-
-```text
-factory-production-notice-agent/
-  agent_interface.json       Static machine-readable integration contract
-  config/                    Request schema and default notice settings
-  docs/                      Public showcase page and visual assets
-  sample_data/               Synthetic demo request
-  scripts/                   Demo runner and clean package helper
-  skills/                    Agent-facing usage instructions
-  src/factory_production_notice/
-                             Reusable Python package and local API
-  tests/                     Regression tests for the public demo
-  workflows/                 Human-reviewed agent workflow description
-```
-
-## Data Flow
-
-```mermaid
-flowchart LR
-  A["Notice request JSON"] --> B["Validator"]
-  B --> C["Workbook generator"]
-  C --> D["Excel notice"]
-  C --> E["HTML preview"]
-  C --> F["Agent context"]
-  F --> G["Review or reporting agent"]
-```
-
-## Integration Direction
-
-The current public demo starts with a normalized JSON request. In a production
-environment, ERP, MES, WMS, BOM, order, or scheduling adapters can produce that
-same request shape, while this project remains the notice-generation boundary.
-
-This keeps the project easy to demonstrate: adapters can change without
-rewriting the notice layout, and agents can call the same CLI or HTTP contract.
-
-## Packaging
-
-Create a clean package:
-
-```powershell
-python scripts\package_project.py --name factory-production-notice-agent --output output
-```
-
-## Security and Privacy
-
-Use demo or masked data only. Keep production BOM files, customer lists,
-supplier lists, generated notice archives, SQLite indexes, executable launchers,
-and workstation logs outside the source tree.
 
 ## License
 

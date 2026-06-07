@@ -35,7 +35,7 @@
     "critical_checks": ["Dimension", "Surface finish", "Label content"]
   },
   "notes": [
-    "Use masked demo data only.",
-    "Confirm final delivery date with planning before release."
+    "Release after first-piece approval.",
+    "Confirm final delivery date with planning before batch start."
   ]
 }
