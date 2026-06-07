@@ -1,0 +1,41 @@
+{
+  "notice_id": "PN-2026-DEMO-001",
+  "work_order": "WO-DEMO-240618",
+  "customer": "Demo Automotive",
+  "priority": "normal",
+  "quantity": 1200,
+  "due_date": "2026-06-18",
+  "issuer": "Planning Office",
+  "product": {
+    "item_code": "FG-AXLE-1001",
+    "name": "Demo Bearing Assembly",
+    "model": "AX-100",
+    "revision": "R2"
+  },
+  "materials": [
+    {"item_code": "RM-RING-001", "name": "Outer Ring Blank", "quantity_per": 1, "unit": "pcs", "source": "Warehouse A"},
+    {"item_code": "RM-RING-002", "name": "Inner Ring Blank", "quantity_per": 1, "unit": "pcs", "source": "Warehouse A"},
+    {"item_code": "PK-LABEL-010", "name": "Customer Label", "quantity_per": 1, "unit": "pcs", "source": "Packing Area"}
+  ],
+  "routing": [
+    {"step": "OP10", "work_center": "Turning", "description": "Rough and finish turning", "cycle_time_sec": 38},
+    {"step": "OP20", "work_center": "Heat Treatment", "description": "Batch heat treatment", "cycle_time_sec": 120},
+    {"step": "OP30", "work_center": "Grinding", "description": "Raceway grinding and inspection", "cycle_time_sec": 52},
+    {"step": "OP40", "work_center": "Packing", "description": "Pack and label", "cycle_time_sec": 18}
+  ],
+  "packaging": {
+    "method": "Carton + pallet",
+    "units_per_carton": 20,
+    "cartons_per_pallet": 24,
+    "label_rule": "Customer label on carton side and pallet front"
+  },
+  "quality": {
+    "first_piece_required": true,
+    "sampling_rule": "AQL normal inspection",
+    "critical_checks": ["Dimension", "Surface finish", "Label content"]
+  },
+  "notes": [
+    "Use masked demo data only.",
+    "Confirm final delivery date with planning before release."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "issuer": "Factory Operations Office",
+  "send_to": ["Production", "Quality", "Warehouse", "Planning"],
+  "default_priority": "normal",
+  "inspection_points": [
+    "Confirm material code and revision before release",
+    "Check routing capacity before batch start",
+    "Verify packaging label against customer requirement",
+    "Record first-piece inspection result"
+  ],
+  "notice_sections": {
+    "materials": "Material Requirement",
+    "routing": "Process Routing",
+    "packaging": "Packaging Requirement",
+    "quality": "Quality Checkpoints"
+  }
+}

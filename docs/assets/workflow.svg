@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420" role="img" aria-label="Production notice workflow">
+  <rect width="980" height="420" fill="#f7fafc"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4d647a"/>
+    </marker>
+  </defs>
+  <g font-family="Arial" text-anchor="middle">
+    <g fill="#fff" stroke="#cbd6e2" stroke-width="2">
+      <rect x="60" y="120" width="150" height="92" rx="8"/>
+      <rect x="250" y="120" width="150" height="92" rx="8"/>
+      <rect x="440" y="120" width="150" height="92" rx="8"/>
+      <rect x="630" y="120" width="150" height="92" rx="8"/>
+      <rect x="820" y="120" width="120" height="92" rx="8"/>
+    </g>
+    <g fill="#172033" font-size="16" font-weight="700">
+      <text x="135" y="158">Request JSON</text>
+      <text x="325" y="158">Validate</text>
+      <text x="515" y="158">Generate</text>
+      <text x="705" y="158">Review</text>
+      <text x="880" y="158">Release</text>
+    </g>
+    <g fill="#5d6878" font-size="13">
+      <text x="135" y="184">order, product,</text><text x="135" y="202">routing, packaging</text>
+      <text x="325" y="184">required fields</text><text x="325" y="202">and structure</text>
+      <text x="515" y="184">xlsx, html,</text><text x="515" y="202">agent context</text>
+      <text x="705" y="184">human approval</text><text x="705" y="202">before use</text>
+      <text x="880" y="184">send to</text><text x="880" y="202">production</text>
+    </g>
+  </g>
+  <g stroke="#4d647a" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="212" y1="166" x2="242" y2="166"/>
+    <line x1="402" y1="166" x2="432" y2="166"/>
+    <line x1="592" y1="166" x2="622" y2="166"/>
+    <line x1="782" y1="166" x2="812" y2="166"/>
+  </g>
+  <rect x="250" y="280" width="500" height="54" rx="6" fill="#eef4f8" stroke="#cbd6e2"/>
+  <text x="500" y="313" text-anchor="middle" font-family="Arial" font-size="16" fill="#172033">The generator is the stable boundary; ERP, MES, WMS, BOM, or planning adapters can feed the same JSON contract.</text>
+</svg>

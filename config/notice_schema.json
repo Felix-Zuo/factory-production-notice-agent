@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProductionNoticeRequest",
+  "type": "object",
+  "required": ["notice_id", "work_order", "product", "quantity", "due_date"],
+  "properties": {
+    "notice_id": {"type": "string"},
+    "work_order": {"type": "string"},
+    "customer": {"type": "string"},
+    "priority": {"type": "string"},
+    "quantity": {"type": "number"},
+    "due_date": {"type": "string"},
+    "product": {
+      "type": "object",
+      "required": ["item_code", "name"],
+      "properties": {
+        "item_code": {"type": "string"},
+        "name": {"type": "string"},
+        "model": {"type": "string"},
+        "revision": {"type": "string"}
+      }
+    },
+    "materials": {"type": "array"},
+    "routing": {"type": "array"},
+    "packaging": {"type": "object"},
+    "quality": {"type": "object"},
+    "notes": {"type": "array"}
+  }
+}

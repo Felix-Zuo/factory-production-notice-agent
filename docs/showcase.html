@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Factory Production Notice Agent</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #162033;
+      --muted: #5d6878;
+      --line: #d9e2ee;
+      --panel: #ffffff;
+      --band: #eef4f8;
+      --accent: #2f6f9f;
+      --accent-2: #8a5f22;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: var(--ink); background: #f8fafc; }
+    header { padding: 54px 32px 42px; background: linear-gradient(135deg, #f7fbfd, #e9f1f6); border-bottom: 1px solid var(--line); }
+    header div { max-width: 1120px; margin: 0 auto; }
+    h1 { margin: 0 0 14px; font-size: clamp(32px, 5vw, 58px); letter-spacing: 0; }
+    .lead { max-width: 840px; font-size: 18px; line-height: 1.7; color: var(--muted); }
+    main { max-width: 1120px; margin: 0 auto; padding: 34px 24px 56px; }
+    section { margin: 34px 0; }
+    h2 { margin: 0 0 16px; font-size: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+    .card h3 { margin: 0 0 8px; font-size: 17px; }
+    .card p { color: var(--muted); line-height: 1.6; margin: 0; }
+    .visual { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; align-items: center; }
+    .visual img { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: white; }
+    .band { background: var(--band); border: 1px solid var(--line); padding: 20px; border-radius: 8px; }
+    code { background: #edf2f7; padding: 2px 6px; border-radius: 4px; }
+    ul { margin: 8px 0 0; color: var(--muted); line-height: 1.7; }
+    @media (max-width: 800px) {
+      .grid, .visual { grid-template-columns: 1fr; }
+      header { padding: 38px 20px 30px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Factory Production Notice Agent</h1>
+      <p class="lead">A compact production-notice generator for manufacturing workflows. It turns a structured order request into an Excel notice, a browser preview, and an agent-readable context payload.</p>
+      <p class="lead">一个面向制造现场的生产通知单生成工具：用标准 JSON 输入替代大量固定模板，输出 Excel、网页预览和智能体可读取的结构化上下文。</p>
+    </div>
+  </header>
+  <main>
+    <section class="visual">
+      <img src="assets/notice-preview.svg" alt="Production notice preview">
+      <div class="band">
+        <h2>Why It Exists</h2>
+        <p>Many factories still release work orders through spreadsheet templates. This project keeps the template logic in code, keeps the public demo data synthetic, and gives external agents a stable interface.</p>
+        <p>许多工厂仍然通过表格模板下发生产任务。本项目把模板逻辑收敛到代码里，用合成数据做展示，并给外部 Agent 留出稳定接口。</p>
+      </div>
+    </section>
+    <section>
+      <h2>Capabilities</h2>
+      <div class="grid">
+        <div class="card"><h3>Notice Generation</h3><p>Generate styled Excel notices and HTML previews from normalized production requests.</p></div>
+        <div class="card"><h3>Agent Contract</h3><p>Expose CLI, HTTP endpoints, sample data, schema paths, and workflow rules in <code>agent_interface.json</code>.</p></div>
+        <div class="card"><h3>Local First</h3><p>Run on a single workstation, keep sensitive BOM and notice history outside the repository.</p></div>
+      </div>
+    </section>
+    <section class="visual">
+      <img src="assets/workflow.svg" alt="Workflow">
+      <img src="assets/agent-interface.svg" alt="Agent interface">
+    </section>
+    <section>
+      <h2>Integration Path</h2>
+      <ul>
+        <li>ERP, MES, WMS, BOM, or scheduling adapters can produce the standard notice request JSON.</li>
+        <li>The generator owns the layout, preview, manifest, and structured agent context.</li>
+        <li>A human reviewer can approve final release before the notice is sent to production.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

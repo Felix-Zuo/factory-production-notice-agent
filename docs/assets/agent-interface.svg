@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420" role="img" aria-label="Agent interface diagram">
+  <rect width="980" height="420" fill="#f8fafc"/>
+  <rect x="70" y="58" width="300" height="304" rx="8" fill="#ffffff" stroke="#cbd6e2"/>
+  <rect x="410" y="58" width="500" height="304" rx="8" fill="#ffffff" stroke="#cbd6e2"/>
+  <text x="100" y="96" font-family="Arial" font-size="20" font-weight="700" fill="#172033">Agent Contract</text>
+  <g font-family="Arial" font-size="15" fill="#172033">
+    <text x="100" y="136">agent_interface.json</text>
+    <text x="100" y="170">config/notice_schema.json</text>
+    <text x="100" y="204">sample_data/demo_notice_request.json</text>
+    <text x="100" y="238">skills/production-notice-generator</text>
+    <text x="100" y="272">workflows/agent_workflow.md</text>
+  </g>
+  <text x="440" y="96" font-family="Arial" font-size="20" font-weight="700" fill="#172033">Callable Interfaces</text>
+  <g font-family="Arial" font-size="15">
+    <rect x="440" y="122" width="420" height="48" rx="6" fill="#eef4f8"/>
+    <text x="462" y="152" fill="#172033">CLI: production-notice generate --input ...</text>
+    <rect x="440" y="188" width="420" height="48" rx="6" fill="#eef4f8"/>
+    <text x="462" y="218" fill="#172033">HTTP: POST /api/generate-notice</text>
+    <rect x="440" y="254" width="420" height="48" rx="6" fill="#eef4f8"/>
+    <text x="462" y="284" fill="#172033">Output: workbook, preview, manifest, context</text>
+  </g>
+  <path d="M370 210 C388 210 392 210 410 210" stroke="#4d647a" stroke-width="2" fill="none"/>
+  <circle cx="385" cy="210" r="5" fill="#2f6f9f"/>
+</svg>
