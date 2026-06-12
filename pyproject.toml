@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "factory-production-notice-agent"
-version = "0.1.0"
+version = "0.1.1"
 description = "Generate production notice workbooks from structured manufacturing requests."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -22,4 +22,5 @@ production-notice = "factory_production_notice.cli:main"
 where = ["src"]
 
 [tool.pytest.ini_options]
+pythonpath = ["src"]
 testpaths = ["tests"]

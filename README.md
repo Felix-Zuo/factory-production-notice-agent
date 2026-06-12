@@ -14,6 +14,9 @@ It is built around a stable notice contract: upstream systems provide order,
 product, material, routing, packaging, and quality data; the generator owns the
 layout, workbook output, preview page, and review-ready artifacts.
 
+Public samples use synthetic manufacturing data only. Replace sample payloads
+with sanitized data before adapting the workflow to a real factory process.
+
 ![Agent contract](docs/assets/screenshots/agent-contract.png)
 
 ### What It Shows
@@ -64,6 +67,15 @@ POST /api/generate-notice
 python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
 python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
 ```
+
+### Validation
+
+```powershell
+python -m pytest -q
+```
+
+The test suite can run directly from a fresh checkout because `pyproject.toml`
+adds `src` to the pytest import path.
 
 ### Structure
 

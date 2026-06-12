@@ -6,7 +6,7 @@ from typing import Any
 def build_agent_interface() -> dict[str, Any]:
     return {
         "name": "factory-production-notice-agent",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "description": "Generate production notice workbooks from structured manufacturing requests.",
         "input_contract": {
             "format": "json",
