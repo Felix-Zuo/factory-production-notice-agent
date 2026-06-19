@@ -3,7 +3,9 @@
 ## Release Checklist
 
 - Run `python -m pytest -q`.
+- Run `operations-notice validate --input sample_data\demo_notice_request.json`.
 - Run `scripts\run_demo.cmd` from a clean checkout or virtual environment.
+- Run `python scripts\verify_package.py output_package_probe\factory-production-notice-agent.zip` after packaging.
 - Open the generated HTML preview and confirm labels, quantities, and review
   sections render correctly.
 - Check that `agent_interface.json`, `config/notice_schema.json`, and
@@ -18,6 +20,8 @@
 - The manufacturing legacy path should still be tested.
 - The local API should return structured JSON for both success and invalid
   request cases.
+- Non-loopback HTTP binding should fail unless `--allow-remote` is used.
+- Formula-like workbook text should be escaped before Excel opens the file.
 
 ## Incident Notes
 

@@ -1,5 +1,9 @@
 # Structured Operations Notice Agent
 
+[![CI](https://github.com/Felix-Zuo/factory-production-notice-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Felix-Zuo/factory-production-notice-agent/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Felix-Zuo/factory-production-notice-agent)](https://github.com/Felix-Zuo/factory-production-notice-agent/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Local-first work-package generator for teams that need a repeatable notice,
 review, and release workflow. The repository keeps the original
 `factory-production-notice-agent` name for continuity, but the public contract is
@@ -76,6 +80,12 @@ scripts\run_demo.cmd
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```
 
+Validate without writing artifacts:
+
+```powershell
+python -m factory_production_notice.cli validate --input sample_data\demo_notice_request.json
+```
+
 Additional synthetic scenarios:
 
 ```text
@@ -123,6 +133,7 @@ adds `src` to the pytest import path.
 - [Roadmap](ROADMAP.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Operations playbook](docs/OPERATIONS_PLAYBOOK.md)
+- [Quality and security notes](docs/QUALITY.md)
 - [Privacy and sanitization notes](docs/PRIVACY.md)
 - [Agent workflow](workflows/agent_workflow.md)
 

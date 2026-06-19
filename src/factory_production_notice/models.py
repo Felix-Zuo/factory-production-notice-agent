@@ -8,6 +8,16 @@ class NoticeValidationError(ValueError):
     """Raised when an operations notice request is missing required data."""
 
 
+def parse_float(value: Any, field_name: str, *, default: float = 0) -> float:
+    try:
+        parsed = float(value if value is not None else default)
+    except (TypeError, ValueError) as exc:
+        raise NoticeValidationError(f"{field_name} must be a number") from exc
+    if parsed < 0:
+        raise NoticeValidationError(f"{field_name} must not be negative")
+    return parsed
+
+
 @dataclass
 class Product:
     item_code: str
@@ -38,7 +48,7 @@ class MaterialLine:
         return cls(
             item_code=str(payload.get("item_code") or payload.get("resource_id") or payload.get("id") or "").strip(),
             name=str(payload.get("name", "")).strip(),
-            quantity_per=float(payload.get("quantity_per") or 0),
+            quantity_per=parse_float(payload.get("quantity_per"), "quantity_per"),
             unit=str(payload.get("unit", "pcs")).strip() or "pcs",
             source=str(payload.get("source", "")).strip(),
         )
@@ -57,12 +67,12 @@ class RoutingStep:
         if cycle_time is None:
             cycle_time = payload.get("target_time_sec")
         if cycle_time is None and payload.get("target_time_min") is not None:
-            cycle_time = float(payload.get("target_time_min") or 0) * 60
+            cycle_time = parse_float(payload.get("target_time_min"), "target_time_min") * 60
         return cls(
             step=str(payload.get("step") or payload.get("id") or "").strip(),
             work_center=str(payload.get("work_center") or payload.get("owner") or payload.get("station") or "").strip(),
             description=str(payload.get("description") or payload.get("instruction") or "").strip(),
-            cycle_time_sec=float(cycle_time or 0),
+            cycle_time_sec=parse_float(cycle_time, "cycle_time_sec"),
         )
 
 
@@ -106,10 +116,7 @@ class ProductionNotice:
         if not notice_id or not work_order or not due_date:
             raise NoticeValidationError("notice_id, work_order, and due_date must not be blank")
 
-        try:
-            quantity = float(payload["quantity"])
-        except (TypeError, ValueError) as exc:
-            raise NoticeValidationError("quantity must be a number") from exc
+        quantity = parse_float(payload["quantity"], "quantity")
         if quantity <= 0:
             raise NoticeValidationError("quantity must be greater than zero")
 
@@ -130,6 +137,9 @@ class ProductionNotice:
             raise NoticeValidationError("fulfillment/packaging must be an object")
         if not isinstance(quality_payload, dict):
             raise NoticeValidationError("controls/quality must be an object")
+        notes_payload = payload.get("notes", [])
+        if not isinstance(notes_payload, list):
+            raise NoticeValidationError("notes must be an array")
 
         return cls(
             notice_id=notice_id,
@@ -147,7 +157,7 @@ class ProductionNotice:
             routing=[RoutingStep.from_dict(item) for item in routing_payload],
             packaging=dict(packaging_payload),
             quality=dict(quality_payload),
-            notes=[str(item) for item in payload.get("notes", [])],
+            notes=[str(item) for item in notes_payload],
         )
 
     def to_agent_context(self) -> dict[str, Any]:

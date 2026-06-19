@@ -9,6 +9,7 @@ from .generator import generate_notice
 from .io_utils import load_sample_request, read_json, write_json
 from .models import ProductionNotice
 from .server import run_server
+from .validation import validate_notice_payload
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -24,6 +25,10 @@ def main(argv: list[str] | None = None) -> None:
     generate.add_argument("--output", default="output")
     generate.set_defaults(func=run_generate)
 
+    validate = sub.add_parser("validate", help="Validate a notice request without writing artifacts.")
+    validate.add_argument("--input", required=True)
+    validate.set_defaults(func=run_validate)
+
     context = sub.add_parser("analysis-context", help="Export structured context for downstream agents.")
     context.add_argument("--input", required=True)
     context.add_argument("--output", required=True)
@@ -37,6 +42,7 @@ def main(argv: list[str] | None = None) -> None:
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8765)
     serve.add_argument("--output", default="output")
+    serve.add_argument("--allow-remote", action="store_true", help="Allow binding to non-loopback hosts.")
     serve.set_defaults(func=run_serve)
 
     args = parser.parse_args(argv)
@@ -53,6 +59,13 @@ def run_generate(args: argparse.Namespace) -> None:
     print(json.dumps(result.as_manifest(), indent=2))
 
 
+def run_validate(args: argparse.Namespace) -> None:
+    result = validate_notice_payload(read_json(args.input))
+    print(json.dumps(result.as_dict(), ensure_ascii=False, indent=2))
+    if not result.ok:
+        raise SystemExit(1)
+
+
 def run_analysis_context(args: argparse.Namespace) -> None:
     notice = ProductionNotice.from_dict(read_json(args.input))
     path = write_json(args.output, notice.to_agent_context())
@@ -65,7 +78,7 @@ def run_agent_spec(args: argparse.Namespace) -> None:
 
 
 def run_serve(args: argparse.Namespace) -> None:
-    run_server(args.host, args.port, args.output)
+    run_server(args.host, args.port, args.output, allow_remote=args.allow_remote)
 
 
 if __name__ == "__main__":

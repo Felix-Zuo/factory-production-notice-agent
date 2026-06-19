@@ -2,10 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from openpyxl import load_workbook
+
 from factory_production_notice.agent_contract import build_agent_interface
 from factory_production_notice.generator import generate_notice
 from factory_production_notice.io_utils import read_json
 from factory_production_notice.models import NoticeValidationError, ProductionNotice
+from factory_production_notice.server import is_loopback_host
+from factory_production_notice.validation import validate_notice_payload
 from scripts.package_project import should_skip
 
 
@@ -17,6 +21,10 @@ def test_demo_generation(tmp_path: Path) -> None:
     assert result.html_path.exists()
     assert result.manifest_path.exists()
     assert result.agent_context_path.exists()
+    manifest = result.as_manifest()
+    assert manifest["output_dir"] == tmp_path.name
+    assert manifest["artifacts"]["html"] == result.html_path.name
+    assert str(tmp_path) not in manifest["artifacts"]["html"]
 
     context = read_json(result.agent_context_path)
     assert context["notice_id"] == "ON-2026-DEMO-001"
@@ -30,6 +38,7 @@ def test_agent_interface_shape() -> None:
     capability_names = {item["name"] for item in spec["capabilities"]}
     assert "generate_operations_notice" in capability_names
     assert "generate_notice" in capability_names
+    assert "validate_notice" in capability_names
     assert spec["input_contract"]["sample_path"].endswith("demo_notice_request.json")
 
 
@@ -86,7 +95,71 @@ def test_rejects_non_object_resource_entries() -> None:
         raise AssertionError("Expected NoticeValidationError")
 
 
+def test_validate_notice_payload_catches_bad_nested_numbers() -> None:
+    result = validate_notice_payload(
+        {
+            "notice_id": "ON-BAD-003",
+            "work_order": "OPS-BAD-003",
+            "quantity": 1,
+            "due_date": "2026-06-30",
+            "subject": {"subject_id": "BAD", "name": "Bad Nested Number"},
+            "resources": [{"resource_id": "R1", "name": "Resource", "quantity_per": "many"}],
+        }
+    )
+
+    assert not result.ok
+    assert result.errors == ["quantity_per must be a number"]
+
+
 def test_package_excludes_generated_probe_outputs() -> None:
     assert should_skip(Path("output") / "demo.html")
     assert should_skip(Path("output_http_probe") / "demo.html")
     assert should_skip(Path("output_alias_probe") / "demo.html")
+
+
+def test_excel_output_escapes_formula_like_user_text(tmp_path: Path) -> None:
+    payload = {
+        "notice_id": "ON-SAFE-001",
+        "work_order": "OPS-SAFE-001",
+        "quantity": 1,
+        "due_date": "2026-06-30",
+        "requester": "=cmd|' /C calc'!A0",
+        "subject": {"subject_id": "SAFE-001", "name": "+malicious"},
+        "resources": [{"resource_id": "RES-001", "name": "@payload", "quantity_per": 1}],
+        "steps": [{"step": "S10", "owner": "-owner", "instruction": "=formula"}],
+    }
+
+    result = generate_notice(payload, tmp_path)
+    wb = load_workbook(result.xlsx_path, data_only=False)
+    ws = wb.active
+    values = [cell.value for row in ws.iter_rows() for cell in row if isinstance(cell.value, str)]
+
+    assert "'=cmd|' /C calc'!A0" in values
+    assert "'+malicious" in values
+    assert "'@payload" in values
+    assert "'-owner" in values
+    assert "'=formula" in values
+
+
+def test_validate_notice_payload_reports_summary_and_warnings() -> None:
+    result = validate_notice_payload(
+        {
+            "notice_id": "ON-WARN-001",
+            "work_order": "OPS-WARN-001",
+            "quantity": 1,
+            "due_date": "2026-06-30",
+            "subject": {"subject_id": "WARN-001", "name": "Sparse payload"},
+        }
+    )
+
+    assert result.ok
+    assert result.summary["notice_id"] == "ON-WARN-001"
+    assert "No resources/materials are listed." in result.warnings
+
+
+def test_loopback_host_guard() -> None:
+    assert is_loopback_host("127.0.0.1")
+    assert is_loopback_host("localhost")
+    assert is_loopback_host("::1")
+    assert not is_loopback_host("0.0.0.0")
+    assert not is_loopback_host("192.168.1.10")

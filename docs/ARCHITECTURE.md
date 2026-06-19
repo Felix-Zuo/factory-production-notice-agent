@@ -45,6 +45,6 @@ Legacy manufacturing fields remain supported to protect existing demo usage:
 ## Runtime Boundary
 
 The HTTP server is for local demos and agent integration tests. It is deliberately
-small, stateless, and file-output based. A production deployment would need
-authentication, authorization, audit logging, retention rules, and an external
-storage boundary.
+small, stateless, file-output based, and loopback-only by default. A production
+deployment would need authentication, authorization, audit logging, retention
+rules, and an external storage boundary.

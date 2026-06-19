@@ -93,6 +93,7 @@
       <table>
         <thead><tr><th>Capability</th><th>Command / Endpoint</th><th>Result</th></tr></thead>
         <tbody>
+          <tr><td>Validate Notice</td><td><code>python -m factory_production_notice.cli validate --input sample_data/demo_notice_request.json</code></td><td>Preflight result with errors, warnings, and summary</td></tr>
           <tr><td>Generate Notice</td><td><code>python -m factory_production_notice.cli generate --input sample_data/demo_notice_request.json --output output</code></td><td>Excel workbook, HTML preview, manifest, context</td></tr>
           <tr><td>Agent Spec</td><td><code>python -m factory_production_notice.cli agent-spec --output output/agent_interface.json</code></td><td>Machine-readable capability contract</td></tr>
           <tr><td>Local API</td><td><code>POST /api/generate-operations-notice</code></td><td>Generated artifacts from a JSON request</td></tr>

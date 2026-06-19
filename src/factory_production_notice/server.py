@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from ipaddress import ip_address
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -35,7 +36,7 @@ class NoticeApiHandler(BaseHTTPRequestHandler):
         try:
             payload = self.read_body_json()
             result = generate_notice(payload, self.output_dir)
-            self.send_json({"ok": True, "artifacts": result.as_manifest()})
+            self.send_json({"ok": True, **result.as_manifest()})
         except Exception as exc:  # API boundary returns structured errors.
             self.send_json({"ok": False, "error": str(exc)}, status=400)
 
@@ -64,7 +65,22 @@ class NoticeApiHandler(BaseHTTPRequestHandler):
         return
 
 
-def run_server(host: str, port: int, output_dir: str | Path) -> None:
+def is_loopback_host(host: str) -> bool:
+    normalized = host.strip().lower()
+    if normalized == "localhost":
+        return True
+    try:
+        return ip_address(normalized).is_loopback
+    except ValueError:
+        return False
+
+
+def run_server(host: str, port: int, output_dir: str | Path, *, allow_remote: bool = False) -> None:
+    if not allow_remote and not is_loopback_host(host):
+        raise SystemExit(
+            "Refusing to bind the unauthenticated demo API to a non-loopback host. "
+            "Use --allow-remote only inside a trusted, isolated network."
+        )
     NoticeApiHandler.output_dir = Path(output_dir)
     server = ThreadingHTTPServer((host, port), NoticeApiHandler)
     print(f"Serving operations notice API at http://{host}:{port}")

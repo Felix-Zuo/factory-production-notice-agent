@@ -4,6 +4,28 @@ This changelog records the public demo evolution. Pre-public entries are
 reconstructed from sanitized implementation milestones so the repository tells a
 complete product story without exposing private operational data.
 
+## 0.2.1 - 2026-06-19
+
+### Added
+
+- `operations-notice validate` command for preflight payload checks.
+- CI checks for sample validation, artifact generation, and package archive
+  verification.
+- Dependabot configuration for Python and GitHub Actions updates.
+- Code of Conduct, Support, and quality/security documentation.
+
+### Changed
+
+- API responses now return artifact file names plus output directory instead of
+  nesting absolute paths under `artifacts`.
+- The local API refuses non-loopback bind hosts unless `--allow-remote` is
+  explicitly passed.
+
+### Fixed
+
+- Escaped formula-like user text before writing Excel workbook cells.
+- Removed illegal control characters from workbook text values.
+
 ## 0.2.0 - 2026-06-19
 
 ### Added

@@ -15,6 +15,7 @@ legacy integrations may still use `product`, `materials`, `routing`,
 ## Run
 
 ```powershell
+python -m factory_production_notice.cli validate --input sample_data\demo_notice_request.json
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```
 

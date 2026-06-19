@@ -20,3 +20,16 @@ jobs:
           python -m pip install -e .[dev]
       - name: Run tests
         run: python -m pytest -q
+      - name: Validate sample payloads
+        run: |
+          operations-notice validate --input sample_data/demo_notice_request.json
+          operations-notice validate --input sample_data/legacy_manufacturing_notice_request.json
+          operations-notice validate --input sample_data/maintenance_notice_request.json
+      - name: Generate demo artifacts
+        run: |
+          operations-notice generate --input sample_data/demo_notice_request.json --output output_ci_demo
+          operations-notice generate --input sample_data/maintenance_notice_request.json --output output_ci_demo
+      - name: Verify release package
+        run: |
+          python scripts/package_project.py --output output_ci_package
+          python scripts/verify_package.py output_ci_package/factory-production-notice-agent.zip

@@ -6,7 +6,7 @@ from typing import Any
 def build_agent_interface() -> dict[str, Any]:
     return {
         "name": "factory-production-notice-agent",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "description": "Generate operations notice workbooks from structured work-package requests.",
         "public_positioning": "Local-first notice generator for manufacturing, warehouse, maintenance, service, and other repeatable operations workflows.",
         "input_contract": {
@@ -48,6 +48,11 @@ def build_agent_interface() -> dict[str, Any]:
                 "name": "run_demo",
                 "description": "Generate the public demo artifacts from synthetic sample data.",
                 "cli": "python -m factory_production_notice.cli run-demo --output output",
+            },
+            {
+                "name": "validate_notice",
+                "description": "Validate a notice request and return preflight warnings without writing artifacts.",
+                "cli": "python -m factory_production_notice.cli validate --input sample_data/demo_notice_request.json",
             },
             {
                 "name": "export_agent_context",

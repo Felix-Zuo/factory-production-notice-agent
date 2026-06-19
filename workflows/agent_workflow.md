@@ -15,18 +15,20 @@ structured operations notice while keeping final release under human control.
    and `due_date` are present.
 2. Check that resource, step, fulfillment, and control fields are consistent
    with the request.
-3. Call the generator through CLI or HTTP.
-4. Read the manifest and `agent_context.json`.
-5. Summarize risks for a human reviewer:
+3. Run the validation command and review warnings.
+4. Call the generator through CLI or HTTP.
+5. Read the manifest and `agent_context.json`.
+6. Summarize risks for a human reviewer:
    - missing subject or execution details
    - unusually high quantity
    - missing fulfillment rule
    - missing approval, review, or inspection rule
-6. Wait for human approval before treating the notice as released into a live workflow.
+7. Wait for human approval before treating the notice as released into a live workflow.
 
 ## CLI
 
 ```powershell
+python -m factory_production_notice.cli validate --input sample_data\demo_notice_request.json
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```
 

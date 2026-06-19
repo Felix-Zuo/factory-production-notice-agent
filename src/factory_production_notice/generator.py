@@ -15,6 +15,9 @@ from openpyxl.utils import get_column_letter
 from .io_utils import write_json
 from .models import ProductionNotice
 
+CONTROL_CHAR_RE = re.compile(r"[\x00-\x08\x0b-\x0c\x0e-\x1f]")
+FORMULA_PREFIXES = ("=", "+", "-", "@")
+
 
 @dataclass
 class GeneratedNotice:
@@ -23,18 +26,34 @@ class GeneratedNotice:
     manifest_path: Path
     agent_context_path: Path
 
-    def as_manifest(self) -> dict[str, str]:
+    def as_manifest(self) -> dict[str, Any]:
         return {
-            "xlsx": str(self.xlsx_path),
-            "html": str(self.html_path),
-            "manifest": str(self.manifest_path),
-            "agent_context": str(self.agent_context_path),
+            "output_dir": self.xlsx_path.parent.name or ".",
+            "artifacts": {
+                "xlsx": self.xlsx_path.name,
+                "html": self.html_path.name,
+                "manifest": self.manifest_path.name,
+                "agent_context": self.agent_context_path.name,
+            },
         }
 
 
 def slug(value: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9._-]+", "-", value.strip()).strip("-")
     return cleaned or "notice"
+
+
+def safe_excel_value(value: Any) -> Any:
+    if not isinstance(value, str):
+        return value
+    cleaned = CONTROL_CHAR_RE.sub("", value)
+    if cleaned.lstrip().startswith(FORMULA_PREFIXES):
+        return f"'{cleaned}"
+    return cleaned
+
+
+def write_cell(ws, row: int, column: int, value: Any):
+    return ws.cell(row=row, column=column, value=safe_excel_value(value))
 
 
 def generate_notice(payload: dict[str, Any], output_dir: str | Path) -> GeneratedNotice:
@@ -107,7 +126,7 @@ def build_workbook(notice: ProductionNotice) -> Workbook:
     start_row = 3
     for row_index, row_values in enumerate(rows, start=start_row):
         for col_index, value in enumerate(row_values, start=1):
-            cell = ws.cell(row=row_index, column=col_index, value=value)
+            cell = write_cell(ws, row_index, col_index, value)
             cell.border = border
             cell.alignment = Alignment(vertical="center", wrap_text=True)
             if col_index % 2 == 1:
@@ -133,7 +152,7 @@ def build_workbook(notice: ProductionNotice) -> Workbook:
 
 def write_section_header(ws, row: int, label: str, fill: PatternFill) -> None:
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=8)
-    cell = ws.cell(row=row, column=1, value=label)
+    cell = write_cell(ws, row, 1, label)
     cell.fill = fill
     cell.font = Font(bold=True, color="203040")
 
@@ -142,7 +161,7 @@ def write_materials(ws, notice: ProductionNotice, start: int, fill: PatternFill,
     write_section_header(ws, start, "Resource Requirement", fill)
     headers = ["Resource ID", "Resource", "Qty / Unit", "Required Qty", "Unit", "Source", "", ""]
     for col, value in enumerate(headers, start=1):
-        cell = ws.cell(row=start + 1, column=col, value=value)
+        cell = write_cell(ws, start + 1, col, value)
         cell.font = Font(bold=True)
         cell.border = border
     row = start + 2
@@ -158,7 +177,7 @@ def write_materials(ws, notice: ProductionNotice, start: int, fill: PatternFill,
             "",
         ]
         for col, value in enumerate(values, start=1):
-            ws.cell(row=row, column=col, value=value).border = border
+            write_cell(ws, row, col, value).border = border
         row += 1
     return row
 
@@ -167,14 +186,14 @@ def write_routing(ws, notice: ProductionNotice, start: int, fill: PatternFill, b
     write_section_header(ws, start, "Execution Steps", fill)
     headers = ["Step", "Owner / Station", "Instruction", "Target Time Sec", "", "", "", ""]
     for col, value in enumerate(headers, start=1):
-        cell = ws.cell(row=start + 1, column=col, value=value)
+        cell = write_cell(ws, start + 1, col, value)
         cell.font = Font(bold=True)
         cell.border = border
     row = start + 2
     for step in notice.routing:
         values = [step.step, step.work_center, step.description, step.cycle_time_sec, "", "", "", ""]
         for col, value in enumerate(values, start=1):
-            ws.cell(row=row, column=col, value=value).border = border
+            write_cell(ws, row, col, value).border = border
         row += 1
     return row
 
@@ -193,10 +212,10 @@ def write_packaging_quality(ws, notice: ProductionNotice, start: int, fill: Patt
     ]
     row = start + 1
     for label, value in rows:
-        ws.cell(row=row, column=1, value=label).font = Font(bold=True)
+        write_cell(ws, row, 1, label).font = Font(bold=True)
         ws.cell(row=row, column=1).border = border
         ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=8)
-        ws.cell(row=row, column=2, value=value).border = border
+        write_cell(ws, row, 2, value).border = border
         row += 1
     return row
 
@@ -207,7 +226,7 @@ def write_notes(ws, notice: ProductionNotice, start: int, fill: PatternFill, bor
     notes = notice.notes or ["Review and approve before releasing to operations."]
     for note in notes:
         ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=8)
-        ws.cell(row=row, column=1, value=f"- {note}").border = border
+        write_cell(ws, row, 1, f"- {note}").border = border
         row += 1
     return row
 
