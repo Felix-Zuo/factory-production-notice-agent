@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Factory Production Notice Agent</title>
+  <title>Structured Operations Notice Agent</title>
   <style>
     :root {
-      --ink: #172033;
-      --muted: #647082;
-      --line: #d8e1eb;
+      --ink: #151b22;
+      --muted: #5f6b78;
+      --line: #d9e1e8;
       --paper: #ffffff;
-      --bg: #f5f8fb;
-      --steel: #1b3b54;
-      --blue: #2f6f9f;
-      --green: #2f7d5c;
-      --amber: #a76b1f;
+      --bg: #f4f6f8;
+      --teal: #0f766e;
+      --amber: #b45309;
+      --plum: #6d3f67;
+      --steel: #243447;
     }
     * { box-sizing: border-box; }
     body {
@@ -23,235 +23,242 @@
       background: var(--bg);
       font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
     }
-    header {
+    .hero {
+      position: relative;
+      min-height: 78vh;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
       color: white;
-      background: linear-gradient(135deg, #13283c, #1d4e6d 64%, #255d62);
-      padding: 34px clamp(22px, 5vw, 70px) 48px;
+      background: #101820;
+    }
+    .hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .42;
+      filter: saturate(.9) contrast(1.04);
+    }
+    .shade {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 20, 28, .64);
     }
     nav {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      right: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 36px;
+      padding: 24px clamp(22px, 5vw, 72px);
     }
-    .brand { display: flex; align-items: center; gap: 14px; font-weight: 800; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
     .mark {
       display: grid;
       place-items: center;
-      width: 52px;
-      height: 52px;
-      border: 1px solid rgba(255,255,255,.36);
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,.35);
       background: rgba(255,255,255,.12);
-      font-weight: 900;
     }
     .lang { display: flex; gap: 8px; }
     button {
-      border: 1px solid rgba(255,255,255,.38);
+      border: 1px solid rgba(255,255,255,.42);
       background: rgba(255,255,255,.12);
       color: white;
-      padding: 9px 14px;
-      border-radius: 999px;
+      padding: 8px 12px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
     }
-    button.active { background: white; color: #183a5a; }
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, .88fr) minmax(460px, 1.12fr);
-      gap: 36px;
-      align-items: center;
+    button.active { background: white; color: #17313c; }
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      width: min(980px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 132px 0 64px;
     }
     h1 {
       margin: 0;
-      max-width: 780px;
-      font-size: clamp(38px, 6vw, 72px);
-      line-height: 1;
+      max-width: 860px;
+      font-size: clamp(38px, 6vw, 76px);
+      line-height: 1.02;
       letter-spacing: 0;
     }
     .lead {
       margin: 22px 0 0;
-      max-width: 720px;
-      color: #d5e3ef;
+      max-width: 760px;
+      color: #e2edf2;
       font-size: clamp(17px, 2vw, 22px);
       line-height: 1.55;
     }
-    .hero img, .shot img {
-      display: block;
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 24px 68px rgba(0,0,0,.24);
-      background: white;
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
     }
-    main { padding: 44px clamp(22px, 5vw, 70px) 76px; }
+    .pill {
+      padding: 8px 11px;
+      border: 1px solid rgba(255,255,255,.28);
+      background: rgba(255,255,255,.12);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    main { padding: 42px clamp(22px, 5vw, 72px) 76px; }
+    .section { max-width: 1180px; margin: 0 auto 44px; }
     h2 { margin: 0 0 18px; font-size: 30px; letter-spacing: 0; }
     .grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 42px;
+      gap: 14px;
     }
     .card {
-      min-height: 150px;
-      padding: 20px;
+      min-height: 142px;
+      padding: 18px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--paper);
-      box-shadow: 0 10px 26px rgba(23,32,51,.06);
     }
-    .card h3 { margin: 0 0 10px; font-size: 18px; }
-    .card p { margin: 0; color: var(--muted); line-height: 1.62; }
-    .split {
+    .card h3 { margin: 0 0 10px; font-size: 17px; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.58; }
+    .band {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(420px, 1fr);
-      gap: 22px;
-      align-items: stretch;
-      margin-bottom: 44px;
-    }
-    .panel {
-      padding: 26px;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      gap: 24px;
+      align-items: center;
+      padding: 28px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: white;
-      box-shadow: 0 10px 26px rgba(23,32,51,.06);
     }
-    .panel p { color: var(--muted); line-height: 1.7; margin: 0 0 16px; }
+    .band p { color: var(--muted); line-height: 1.7; margin: 0 0 14px; }
+    .band img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 8px; }
     .metrics {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-      margin-top: 22px;
+      margin-top: 20px;
     }
     .metric {
       padding: 14px;
       border: 1px solid var(--line);
-      background: #f9fbfd;
+      background: #f8fafb;
     }
-    .metric strong { display: block; font-size: 26px; color: var(--steel); }
+    .metric strong { display: block; color: var(--steel); font-size: 26px; }
     .metric span { color: var(--muted); font-size: 13px; }
-    .shot {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-    }
-    .shot img { box-shadow: none; border: 0; }
     code {
       display: block;
       padding: 16px;
-      color: #dce8f4;
-      background: #111b29;
+      color: #eaf1f6;
+      background: #121a24;
       border-radius: 8px;
       line-height: 1.58;
       white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
+    .accent-teal { border-top: 4px solid var(--teal); }
+    .accent-amber { border-top: 4px solid var(--amber); }
+    .accent-plum { border-top: 4px solid var(--plum); }
+    .accent-steel { border-top: 4px solid var(--steel); }
     .lang-block[data-lang="en"] .zh,
     .lang-block[data-lang="zh"] .en { display: none; }
-    @media (max-width: 1040px) {
-      .hero, .split { grid-template-columns: 1fr; }
+    @media (max-width: 980px) {
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .band { grid-template-columns: 1fr; padding: 22px; }
     }
     @media (max-width: 620px) {
-      .grid, .metrics { grid-template-columns: 1fr; }
       nav { align-items: flex-start; flex-direction: column; }
+      .grid, .metrics { grid-template-columns: 1fr; }
+      .hero { min-height: 86vh; }
     }
   </style>
 </head>
 <body class="lang-block" data-lang="zh">
-  <header>
+  <header class="hero">
+    <img src="assets/notice-preview.svg" alt="Operations notice workbook preview">
+    <div class="shade"></div>
     <nav>
-      <div class="brand"><div class="mark">PN</div><div>Factory Production Notice Agent</div></div>
+      <div class="brand"><div class="mark">ON</div><div>Structured Operations Notice Agent</div></div>
       <div class="lang">
         <button class="active" data-set-lang="zh">中文</button>
         <button data-set-lang="en">English</button>
       </div>
     </nav>
-    <section class="hero">
-      <div>
-        <h1 class="zh">生产通知单自动化工作台</h1>
-        <h1 class="en">Production Notice Automation Workbench</h1>
-        <p class="lead zh">把工单、产品、物料、工艺、包装和质检要求收敛成一份标准请求，自动生成 Excel 通知单、浏览器预览、发布清单和可编排上下文。</p>
-        <p class="lead en">A manufacturing workflow that converts work-order, product, material, routing, packaging, and quality data into release-ready notice artifacts.</p>
+    <section class="hero-copy">
+      <h1 class="zh">结构化作业通知工作台</h1>
+      <h1 class="en">Structured Operations Notice Workbench</h1>
+      <p class="lead zh">把工单、资源、步骤、履约和控制点收敛成一份可审核的通知包，输出 Excel、网页预览、manifest 和 agent context。</p>
+      <p class="lead en">Convert work orders, resources, steps, fulfillment rules, and controls into review-ready Excel, preview, manifest, and agent context artifacts.</p>
+      <div class="pills">
+        <span class="pill">manufacturing</span>
+        <span class="pill">warehouse</span>
+        <span class="pill">maintenance</span>
+        <span class="pill">service</span>
+        <span class="pill">compliance</span>
       </div>
-      <img src="assets/screenshots/notice-output.png" alt="Generated production notice screenshot">
     </section>
   </header>
 
   <main>
-    <h2 class="zh">核心能力</h2>
-    <h2 class="en">Core Capabilities</h2>
-    <section class="grid">
-      <article class="card">
-        <h3 class="zh">结构化工单</h3><h3 class="en">Structured Work Order</h3>
-        <p class="zh">用标准 JSON 承接订单、产品、数量、交期、物料、路线、包装和质检字段。</p>
-        <p class="en">A stable JSON contract for order, product, quantity, due date, material, routing, packaging, and quality fields.</p>
-      </article>
-      <article class="card">
-        <h3 class="zh">通知单生成</h3><h3 class="en">Notice Generation</h3>
-        <p class="zh">同一份请求同时输出 Excel 工作簿、网页预览、发布清单和结构化上下文。</p>
-        <p class="en">One payload produces the Excel workbook, browser preview, release manifest, and structured context.</p>
-      </article>
-      <article class="card">
-        <h3 class="zh">现场审核</h3><h3 class="en">Shop-floor Review</h3>
-        <p class="zh">物料需求、工艺路线、包装规则、质检要求和审批区集中在一张可审核页面。</p>
-        <p class="en">Material demand, routing, packaging, quality checks, and approvals stay in one review surface.</p>
-      </article>
-      <article class="card">
-        <h3 class="zh">Agent 接口</h3><h3 class="en">Agent Interface</h3>
-        <p class="zh">命令行、本地 HTTP API、工作流文件和 Skill 文件都围绕同一份契约展开。</p>
-        <p class="en">CLI, local HTTP API, workflow docs, and skill instructions share the same contract.</p>
-      </article>
+    <section class="section">
+      <h2 class="zh">适用场景</h2>
+      <h2 class="en">Use Cases</h2>
+      <div class="grid">
+        <article class="card accent-teal">
+          <h3 class="zh">制造发布</h3><h3 class="en">Manufacturing Release</h3>
+          <p class="zh">保留生产通知单、物料、工艺路线、包装和质检字段的兼容能力。</p>
+          <p class="en">Keeps compatibility with production notices, materials, routing, packaging, and quality checks.</p>
+        </article>
+        <article class="card accent-amber">
+          <h3 class="zh">仓储履约</h3><h3 class="en">Warehouse Fulfillment</h3>
+          <p class="zh">把拣配、标签、容器、批次和出库检查放入同一份作业通知。</p>
+          <p class="en">Coordinates picking, labels, containers, batch rules, and dispatch checks in one notice.</p>
+        </article>
+        <article class="card accent-plum">
+          <h3 class="zh">维修服务</h3><h3 class="en">Maintenance Service</h3>
+          <p class="zh">用 subject、resources 和 steps 表达设备、备件、工具和现场执行步骤。</p>
+          <p class="en">Uses subject, resources, and steps for assets, spare parts, tools, and field execution.</p>
+        </article>
+        <article class="card accent-steel">
+          <h3 class="zh">审核闭环</h3><h3 class="en">Review Loop</h3>
+          <p class="zh">生成器只准备发布包，最终放行保留给人工审批和真实系统边界。</p>
+          <p class="en">The generator prepares release artifacts while final approval stays with a human gate.</p>
+        </article>
+      </div>
     </section>
 
-    <section class="split">
-      <div class="panel">
-        <h2 class="zh">输出资产</h2>
-        <h2 class="en">Generated Artifacts</h2>
-        <p class="zh">生成结果包含通知单工作簿、浏览器预览、manifest 和 agent context。生产、质检、仓库、计划可以围绕同一份数据进行审核和流转。</p>
-        <p class="en">The output set includes a notice workbook, browser preview, manifest, and agent context. Production, quality, warehouse, and planning teams work from the same payload.</p>
+    <section class="section band">
+      <div>
+        <h2 class="zh">通用契约</h2>
+        <h2 class="en">Generic Contract</h2>
+        <p class="zh">v0.2 契约优先使用 subject、resources、steps、fulfillment 和 controls，同时兼容 product、materials、routing、packaging 和 quality。</p>
+        <p class="en">The v0.2 contract prefers subject, resources, steps, fulfillment, and controls while keeping product, materials, routing, packaging, and quality aliases working.</p>
+        <code>python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output</code>
+      </div>
+      <img src="assets/agent-interface.svg" alt="Agent contract diagram">
+    </section>
+
+    <section class="section band">
+      <div>
+        <h2 class="zh">可交付产物</h2>
+        <h2 class="en">Artifacts</h2>
+        <p class="zh">同一个 JSON 请求生成四类产物：Excel 作业通知、浏览器预览、发布 manifest、以及给下游 agent 分析使用的结构化上下文。</p>
+        <p class="en">One JSON request produces four artifact types: workbook, browser preview, manifest, and structured context for downstream agents.</p>
         <div class="metrics">
-          <div class="metric"><strong>4</strong><span class="zh">输出文件</span><span class="en">artifact types</span></div>
-          <div class="metric"><strong>3</strong><span class="zh">调用方式</span><span class="en">interfaces</span></div>
-          <div class="metric"><strong>1</strong><span class="zh">标准契约</span><span class="en">contract</span></div>
+          <div class="metric"><strong>4</strong><span class="zh">产物类型</span><span class="en">artifact types</span></div>
+          <div class="metric"><strong>2</strong><span class="zh">API 路径</span><span class="en">API paths</span></div>
+          <div class="metric"><strong>5</strong><span class="zh">场景族</span><span class="en">scenario families</span></div>
         </div>
       </div>
-      <div class="shot"><img src="assets/workflow.svg" alt="Workflow architecture"></div>
-    </section>
-
-    <section class="split">
-      <div class="shot"><img src="assets/screenshots/agent-contract.png" alt="Agent contract screenshot"></div>
-      <div class="panel">
-        <h2 class="zh">自动化契约</h2>
-        <h2 class="en">Automation Contract</h2>
-        <p class="zh">外部系统、分析助手或流程编排器只需要按 schema 传入请求，不需要理解内部版式和 Excel 写入细节。</p>
-        <p class="en">External systems, analysis assistants, and orchestrators can call the schema without knowing the internal workbook layout.</p>
-        <code>python -m factory_production_notice.cli generate --input sample_data/demo_notice_request.json --output output</code>
-      </div>
-    </section>
-
-    <h2 class="zh">扩展路径</h2>
-    <h2 class="en">Expansion Path</h2>
-    <section class="grid">
-      <article class="card">
-        <h3 class="zh">ERP 工单</h3><h3 class="en">ERP Work Orders</h3>
-        <p class="zh">从销售订单、生产订单或计划排程转换为标准通知单请求。</p>
-        <p class="en">Convert sales orders, production orders, or planning schedules into notice requests.</p>
-      </article>
-      <article class="card">
-        <h3 class="zh">BOM 物料</h3><h3 class="en">BOM Materials</h3>
-        <p class="zh">按生产数量展开关键物料、包装材料和标签需求。</p>
-        <p class="en">Expand critical material, packaging, and label demand by production quantity.</p>
-      </article>
-      <article class="card">
-        <h3 class="zh">MES 路线</h3><h3 class="en">MES Routing</h3>
-        <p class="zh">将工艺路线、工位、节拍和首件检查要求写入通知单。</p>
-        <p class="en">Write routing, work centers, cycle time, and first-piece checks into the notice.</p>
-      </article>
-      <article class="card">
-        <h3 class="zh">审核闭环</h3><h3 class="en">Review Loop</h3>
-        <p class="zh">发布前保留人工审核入口，输出给现场使用的最终通知单。</p>
-        <p class="en">Keep release approval in the loop before the final notice reaches the shop floor.</p>
-      </article>
+      <img src="assets/workflow.svg" alt="Operations notice workflow">
     </section>
   </main>
 

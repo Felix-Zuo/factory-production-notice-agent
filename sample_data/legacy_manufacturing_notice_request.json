@@ -1,0 +1,40 @@
+{
+  "notice_id": "PN-2026-DEMO-002",
+  "notice_type": "Production Notice",
+  "domain": "manufacturing-release",
+  "work_order": "WO-DEMO-240620",
+  "customer": "Demo Manufacturing Team",
+  "priority": "normal",
+  "quantity": 600,
+  "quantity_unit": "pcs",
+  "due_date": "2026-06-28",
+  "issuer": "Planning Office",
+  "product": {
+    "item_code": "FG-DEMO-600",
+    "name": "Demo Assembly",
+    "model": "GEN-600",
+    "revision": "R1"
+  },
+  "materials": [
+    {"item_code": "RM-DEMO-001", "name": "Base Component", "quantity_per": 1, "unit": "pcs", "source": "Warehouse A"},
+    {"item_code": "PK-DEMO-010", "name": "Serialized Label", "quantity_per": 1, "unit": "pcs", "source": "Print Station"}
+  ],
+  "routing": [
+    {"step": "OP10", "work_center": "Assembly Cell", "description": "Assemble and scan demo component", "cycle_time_sec": 45},
+    {"step": "OP20", "work_center": "Inspection", "description": "Verify label and checklist", "cycle_time_sec": 20}
+  ],
+  "packaging": {
+    "method": "Carton + pallet",
+    "units_per_carton": 20,
+    "cartons_per_pallet": 30,
+    "label_rule": "Demo label on carton side"
+  },
+  "quality": {
+    "first_piece_required": true,
+    "sampling_rule": "Demo normal inspection",
+    "critical_checks": ["label", "count", "revision"]
+  },
+  "notes": [
+    "Synthetic manufacturing sample for compatibility testing."
+  ]
+}

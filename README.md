@@ -1,34 +1,55 @@
-# Factory Production Notice Agent
+# Structured Operations Notice Agent
 
-工厂生产通知单自动化工具
+Local-first work-package generator for teams that need a repeatable notice,
+review, and release workflow. The repository keeps the original
+`factory-production-notice-agent` name for continuity, but the public contract is
+now generic enough for manufacturing release, warehouse fulfillment,
+maintenance, field service, and compliance review scenarios.
 
-![Production notice output](docs/assets/screenshots/notice-output.png)
+![Operations notice preview](docs/assets/notice-preview.svg)
 
-## English
+## What It Does
 
-A local-first manufacturing workflow tool that turns a structured work-order
-request into a production notice workbook, browser preview, release manifest,
-and downstream automation context.
+- Turns a structured JSON request into an Excel workbook, browser preview,
+  manifest, and agent-readable context.
+- Supports generic `subject`, `resources`, `steps`, `fulfillment`, and
+  `controls` fields while preserving legacy manufacturing aliases.
+- Keeps generated artifacts local by default and keeps final release behind a
+  human approval gate.
+- Exposes both CLI and local HTTP entry points for workflow automation demos.
+- Uses only synthetic public sample data.
 
-It is built around a stable notice contract: upstream systems provide order,
-product, material, routing, packaging, and quality data; the generator owns the
-layout, workbook output, preview page, and review-ready artifacts.
+## Public Demo Contract
 
-Public samples use synthetic manufacturing data only. Replace sample payloads
-with sanitized data before adapting the workflow to a real factory process.
+The preferred v0.2 contract is intentionally cross-domain:
 
-![Agent contract](docs/assets/screenshots/agent-contract.png)
+```json
+{
+  "notice_id": "ON-2026-DEMO-001",
+  "notice_type": "Operations Notice",
+  "domain": "warehouse-fulfillment",
+  "work_order": "OPS-DEMO-240619",
+  "subject": {"subject_id": "KIT-LAUNCH-240", "name": "Regional Launch Kit"},
+  "quantity": 240,
+  "quantity_unit": "kits",
+  "resources": [],
+  "steps": [],
+  "fulfillment": {},
+  "controls": {}
+}
+```
 
-### What It Shows
+Legacy keys still work:
 
-- Production notice generation from a normalized manufacturing request.
-- Excel workbook and browser preview output from the same payload.
-- Material requirement expansion by order quantity.
-- Process routing, packaging, quality, release notes, and approval zones.
-- CLI and local HTTP interfaces for workflow automation.
-- Agent-readable context for review, reporting, and orchestration.
+```text
+product -> subject
+materials -> resources
+routing -> steps
+packaging -> fulfillment
+quality -> controls
+```
 
-### Run
+## Run From a Fresh Checkout
 
 ```powershell
 py -m venv .venv
@@ -40,16 +61,29 @@ py -m venv .venv
 Open the generated preview:
 
 ```powershell
-start output\PN-2026-DEMO-001-FG-AXLE-1001.html
+start output\ON-2026-DEMO-001-KIT-LAUNCH-240.html
 ```
 
-### Generate From JSON
+Or use the packaged helper:
+
+```powershell
+scripts\run_demo.cmd
+```
+
+## Generate From JSON
 
 ```powershell
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```
 
-### Local API
+Additional synthetic scenarios:
+
+```text
+sample_data\legacy_manufacturing_notice_request.json
+sample_data\maintenance_notice_request.json
+```
+
+## Local API
 
 ```powershell
 python -m factory_production_notice.cli serve --host 127.0.0.1 --port 8765 --output output
@@ -59,16 +93,22 @@ python -m factory_production_notice.cli serve --host 127.0.0.1 --port 8765 --out
 GET  /health
 GET  /agent-interface
 POST /api/generate-notice
+POST /api/generate-operations-notice
 ```
 
-### Agent Contract
+`/api/generate-notice` remains for compatibility. New integrations should use
+`/api/generate-operations-notice`.
+
+## Agent Contract
 
 ```powershell
 python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
 python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
 ```
 
-### Validation
+![Agent contract](docs/assets/agent-interface.svg)
+
+## Validation
 
 ```powershell
 python -m pytest -q
@@ -77,7 +117,16 @@ python -m pytest -q
 The test suite can run directly from a fresh checkout because `pyproject.toml`
 adds `src` to the pytest import path.
 
-### Structure
+## Product Materials
+
+- [Changelog](CHANGELOG.md)
+- [Roadmap](ROADMAP.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Operations playbook](docs/OPERATIONS_PLAYBOOK.md)
+- [Privacy and sanitization notes](docs/PRIVACY.md)
+- [Agent workflow](workflows/agent_workflow.md)
+
+## Structure
 
 ```text
 factory-production-notice-agent/
@@ -90,69 +139,6 @@ factory-production-notice-agent/
   src/factory_production_notice/
   tests/
   workflows/
-```
-
-## 中文
-
-这是一个面向制造现场的生产通知单自动化工具。它把结构化工单请求转换成
-Excel 生产通知单、浏览器预览、发布清单和可供下游自动化流程读取的上下文。
-
-项目核心是一份稳定的通知单契约：上游系统提供订单、产品、物料、工艺路线、
-包装和质检数据，生成器负责版式、工作簿、预览页面和待审核交付物。
-
-### 展示能力
-
-- 从标准制造请求生成生产通知单。
-- 同一份数据同时输出 Excel 工作簿和网页预览。
-- 按生产数量展开物料需求。
-- 覆盖工艺路线、包装、质检、发布备注和审批区。
-- 提供命令行和本地 HTTP 接口。
-- 输出可被 Agent 读取的结构化上下文，用于审核、报告和编排。
-
-### 快速运行
-
-```powershell
-py -m venv .venv
-.\.venv\Scripts\python -m pip install -r requirements.txt
-.\.venv\Scripts\python -m pip install -e .
-.\.venv\Scripts\python -m factory_production_notice.cli run-demo --output output
-```
-
-打开生成结果：
-
-```powershell
-start output\PN-2026-DEMO-001-FG-AXLE-1001.html
-```
-
-### 从 JSON 生成通知单
-
-```powershell
-python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
-```
-
-### 本地接口
-
-```powershell
-python -m factory_production_notice.cli serve --host 127.0.0.1 --port 8765 --output output
-```
-
-```text
-GET  /health
-GET  /agent-interface
-POST /api/generate-notice
-```
-
-### 自动化契约
-
-```powershell
-python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
-python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
-```
-
-## Showcase
-
-```powershell
-start docs\showcase.html
 ```
 
 ## License

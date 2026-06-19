@@ -1,28 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560" role="img" aria-label="Production notice workbook preview">
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560" role="img" aria-label="Operations notice workbook preview">
   <rect width="980" height="560" fill="#f7fafc"/>
   <rect x="54" y="42" width="872" height="476" rx="8" fill="#fff" stroke="#cbd6e2"/>
   <rect x="54" y="42" width="872" height="62" rx="8" fill="#203040"/>
-  <text x="490" y="82" text-anchor="middle" font-family="Arial" font-size="28" font-weight="700" fill="#fff">PRODUCTION NOTICE</text>
+  <text x="490" y="82" text-anchor="middle" font-family="Arial" font-size="28" font-weight="700" fill="#fff">OPERATIONS NOTICE</text>
   <g font-family="Arial" font-size="15" fill="#172033">
     <rect x="84" y="136" width="180" height="42" fill="#f2f5f9" stroke="#cbd6e2"/>
     <rect x="264" y="136" width="210" height="42" fill="#fff" stroke="#cbd6e2"/>
     <rect x="474" y="136" width="160" height="42" fill="#f2f5f9" stroke="#cbd6e2"/>
     <rect x="634" y="136" width="250" height="42" fill="#fff" stroke="#cbd6e2"/>
     <text x="104" y="162" font-weight="700">Notice ID</text>
-    <text x="284" y="162">PN-2026-DEMO-001</text>
+    <text x="284" y="162">ON-2026-DEMO-001</text>
     <text x="494" y="162" font-weight="700">Work Order</text>
-    <text x="654" y="162">WO-DEMO-240618</text>
+    <text x="654" y="162">OPS-DEMO-240619</text>
     <rect x="84" y="178" width="180" height="42" fill="#f2f5f9" stroke="#cbd6e2"/>
     <rect x="264" y="178" width="210" height="42" fill="#fff" stroke="#cbd6e2"/>
     <rect x="474" y="178" width="160" height="42" fill="#f2f5f9" stroke="#cbd6e2"/>
     <rect x="634" y="178" width="250" height="42" fill="#fff" stroke="#cbd6e2"/>
-    <text x="104" y="204" font-weight="700">Product</text>
-    <text x="284" y="204">Demo Bearing Assembly</text>
+    <text x="104" y="204" font-weight="700">Subject</text>
+    <text x="284" y="204">Regional Launch Kit</text>
     <text x="494" y="204" font-weight="700">Quantity</text>
-    <text x="654" y="204">1200</text>
+    <text x="654" y="204">240 kits</text>
   </g>
   <rect x="84" y="254" width="800" height="34" fill="#e8eef5" stroke="#cbd6e2"/>
-  <text x="104" y="276" font-family="Arial" font-size="16" font-weight="700" fill="#203040">Material Requirement</text>
+  <text x="104" y="276" font-family="Arial" font-size="16" font-weight="700" fill="#203040">Resource Requirement</text>
   <g stroke="#cbd6e2" fill="#fff">
     <rect x="84" y="288" width="800" height="124"/>
     <line x1="84" y1="330" x2="884" y2="330"/>
@@ -32,19 +32,19 @@
     <line x1="660" y1="288" x2="660" y2="412"/>
   </g>
   <g font-family="Arial" font-size="14" fill="#172033">
-    <text x="104" y="314" font-weight="700">Item Code</text>
-    <text x="270" y="314" font-weight="700">Material</text>
-    <text x="540" y="314" font-weight="700">Order Qty</text>
+    <text x="104" y="314" font-weight="700">Resource ID</text>
+    <text x="270" y="314" font-weight="700">Resource</text>
+    <text x="540" y="314" font-weight="700">Required Qty</text>
     <text x="680" y="314" font-weight="700">Source</text>
-    <text x="104" y="355">RM-RING-001</text>
-    <text x="270" y="355">Outer Ring Blank</text>
-    <text x="540" y="355">1200</text>
-    <text x="680" y="355">Warehouse A</text>
-    <text x="104" y="396">PK-LABEL-010</text>
-    <text x="270" y="396">Customer Label</text>
-    <text x="540" y="396">1200</text>
-    <text x="680" y="396">Packing Area</text>
+    <text x="104" y="355">DOC-SOP-001</text>
+    <text x="270" y="355">Setup Instruction Pack</text>
+    <text x="540" y="355">240</text>
+    <text x="680" y="355">Document Control</text>
+    <text x="104" y="396">PKG-TOTE-020</text>
+    <text x="270" y="396">Reusable Dispatch Tote</text>
+    <text x="540" y="396">240</text>
+    <text x="680" y="396">Warehouse A</text>
   </g>
   <rect x="84" y="438" width="800" height="44" fill="#e8eef5" stroke="#cbd6e2"/>
-  <text x="104" y="466" font-family="Arial" font-size="16" font-weight="700" fill="#203040">Process Routing + Packaging + Quality</text>
+  <text x="104" y="466" font-family="Arial" font-size="16" font-weight="700" fill="#203040">Execution Steps + Fulfillment + Controls</text>
 </svg>

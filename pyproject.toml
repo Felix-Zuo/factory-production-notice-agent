@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "factory-production-notice-agent"
-version = "0.1.1"
-description = "Generate production notice workbooks from structured manufacturing requests."
+version = "0.2.0"
+description = "Generate operations notice workbooks from structured work-package requests."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -16,6 +16,7 @@ dependencies = ["openpyxl>=3.1.0"]
 dev = ["pytest>=8.0"]
 
 [project.scripts]
+operations-notice = "factory_production_notice.cli:main"
 production-notice = "factory_production_notice.cli:main"
 
 [tool.setuptools.packages.find]

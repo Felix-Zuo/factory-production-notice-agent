@@ -1,41 +1,44 @@
 {
-  "notice_id": "PN-2026-DEMO-001",
-  "work_order": "WO-DEMO-240618",
-  "customer": "Demo Automotive",
+  "notice_id": "ON-2026-DEMO-001",
+  "notice_type": "Operations Notice",
+  "domain": "warehouse-fulfillment",
+  "work_order": "OPS-DEMO-240619",
+  "requester": "Demo Operations Team",
   "priority": "normal",
-  "quantity": 1200,
-  "due_date": "2026-06-18",
-  "issuer": "Planning Office",
-  "product": {
-    "item_code": "FG-AXLE-1001",
-    "name": "Demo Bearing Assembly",
-    "model": "AX-100",
+  "quantity": 240,
+  "quantity_unit": "kits",
+  "due_date": "2026-06-26",
+  "issuer": "Operations Control",
+  "subject": {
+    "subject_id": "KIT-LAUNCH-240",
+    "name": "Regional Launch Kit",
+    "category": "multi-site rollout",
     "revision": "R2"
   },
-  "materials": [
-    {"item_code": "RM-RING-001", "name": "Outer Ring Blank", "quantity_per": 1, "unit": "pcs", "source": "Warehouse A"},
-    {"item_code": "RM-RING-002", "name": "Inner Ring Blank", "quantity_per": 1, "unit": "pcs", "source": "Warehouse A"},
-    {"item_code": "PK-LABEL-010", "name": "Customer Label", "quantity_per": 1, "unit": "pcs", "source": "Packing Area"}
+  "resources": [
+    {"resource_id": "DOC-SOP-001", "name": "Setup Instruction Pack", "quantity_per": 1, "unit": "set", "source": "Document Control"},
+    {"resource_id": "LBL-SITE-010", "name": "Site Label Set", "quantity_per": 1, "unit": "set", "source": "Print Station"},
+    {"resource_id": "PKG-TOTE-020", "name": "Reusable Dispatch Tote", "quantity_per": 1, "unit": "pcs", "source": "Warehouse A"}
   ],
-  "routing": [
-    {"step": "OP10", "work_center": "Turning", "description": "Rough and finish turning", "cycle_time_sec": 38},
-    {"step": "OP20", "work_center": "Heat Treatment", "description": "Batch heat treatment", "cycle_time_sec": 120},
-    {"step": "OP30", "work_center": "Grinding", "description": "Raceway grinding and inspection", "cycle_time_sec": 52},
-    {"step": "OP40", "work_center": "Packing", "description": "Pack and label", "cycle_time_sec": 18}
+  "steps": [
+    {"step": "S10", "owner": "Planning", "instruction": "Confirm site list and kit quantity", "target_time_min": 6},
+    {"step": "S20", "owner": "Warehouse", "instruction": "Pick instruction packs, labels, and totes", "target_time_min": 9},
+    {"step": "S30", "owner": "Control Desk", "instruction": "Scan sample kits and verify manifest fields", "target_time_min": 4},
+    {"step": "S40", "owner": "Dispatch", "instruction": "Seal totes and release to outbound staging", "target_time_min": 5}
   ],
-  "packaging": {
-    "method": "Carton + pallet",
-    "units_per_carton": 20,
-    "cartons_per_pallet": 24,
-    "label_rule": "Customer label on carton side and pallet front"
+  "fulfillment": {
+    "method": "Reusable tote + outbound staging lane",
+    "units_per_container": 12,
+    "containers_per_batch": 20,
+    "label_rule": "Site code, rollout wave, and manifest ID on tote front"
   },
-  "quality": {
-    "first_piece_required": true,
-    "sampling_rule": "AQL normal inspection",
-    "critical_checks": ["Dimension", "Surface finish", "Label content"]
+  "controls": {
+    "approval_required": true,
+    "review_rule": "Scan 1 kit per outbound lane and verify site label against manifest",
+    "critical_controls": ["site label", "kit count", "manifest ID"]
   },
   "notes": [
-    "Release after first-piece approval.",
-    "Confirm final delivery date with planning before batch start."
+    "Release only after control desk signs the manifest sample.",
+    "Use synthetic data only in public demos; replace with masked records for internal trials."
   ]
 }

@@ -7,6 +7,8 @@ dist/
 build/
 *.egg-info/
 output/
+output_*/
+output_*.txt
 tmp/
 logs/
 data/

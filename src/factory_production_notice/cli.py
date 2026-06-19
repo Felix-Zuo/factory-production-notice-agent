@@ -12,14 +12,14 @@ from .server import run_server
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(prog="production-notice")
+    parser = argparse.ArgumentParser(prog="production-notice", description="Generate structured operations notice artifacts.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     demo = sub.add_parser("run-demo", help="Generate demo artifacts from synthetic sample data.")
     demo.add_argument("--output", default="output")
     demo.set_defaults(func=run_demo)
 
-    generate = sub.add_parser("generate", help="Generate a production notice from a JSON request.")
+    generate = sub.add_parser("generate", help="Generate an operations notice from a JSON request.")
     generate.add_argument("--input", required=True)
     generate.add_argument("--output", default="output")
     generate.set_defaults(func=run_generate)

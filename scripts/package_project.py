@@ -13,6 +13,8 @@ EXCLUDE_PATTERNS = ["*.pyc", "*.pyo", "*.sqlite", "*.db", "*.exe", "*.zip"]
 def should_skip(path: Path) -> bool:
     if any(part in EXCLUDE_DIRS for part in path.parts):
         return True
+    if any(part.startswith("output_") for part in path.parts):
+        return True
     if any(part.endswith(".egg-info") for part in path.parts):
         return True
     return any(fnmatch.fnmatch(path.name, pattern) for pattern in EXCLUDE_PATTERNS)

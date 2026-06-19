@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Factory Production Notice Agent Contract</title>
+  <title>Structured Operations Notice Agent Contract</title>
   <style>
     :root {
       --ink: #172033;
@@ -70,19 +70,19 @@
   <main>
     <header>
       <h1>Automation Contract</h1>
-      <div class="sub">CLI, local API, workflow files, and downstream context share one production notice request.</div>
+      <div class="sub">CLI, local API, workflow files, and downstream context share one operations notice request.</div>
     </header>
     <div class="content">
       <section class="grid">
         <div class="card">
           <div class="label">Input</div>
-          <div class="value">ProductionNoticeRequest</div>
-          <div class="desc">Order, product, material, routing, packaging, and quality fields.</div>
+          <div class="value">OperationsNoticeRequest</div>
+          <div class="desc">Work order, subject, resources, steps, fulfillment, and controls.</div>
         </div>
         <div class="card">
           <div class="label">Output</div>
           <div class="value">Workbook + Preview</div>
-          <div class="desc">Excel notice, browser preview, manifest, and agent context.</div>
+          <div class="desc">Excel workbook, browser preview, manifest, and agent context.</div>
         </div>
         <div class="card">
           <div class="label">Interfaces</div>
@@ -93,9 +93,9 @@
       <table>
         <thead><tr><th>Capability</th><th>Command / Endpoint</th><th>Result</th></tr></thead>
         <tbody>
-          <tr><td>Generate Notice</td><td><code>python -m factory_production_notice.cli generate --input sample_data/demo_notice_request.json --output output</code></td><td>Excel notice, HTML preview, manifest, context</td></tr>
+          <tr><td>Generate Notice</td><td><code>python -m factory_production_notice.cli generate --input sample_data/demo_notice_request.json --output output</code></td><td>Excel workbook, HTML preview, manifest, context</td></tr>
           <tr><td>Agent Spec</td><td><code>python -m factory_production_notice.cli agent-spec --output output/agent_interface.json</code></td><td>Machine-readable capability contract</td></tr>
-          <tr><td>Local API</td><td><code>POST /api/generate-notice</code></td><td>Generated artifacts from a JSON request</td></tr>
+          <tr><td>Local API</td><td><code>POST /api/generate-operations-notice</code></td><td>Generated artifacts from a JSON request</td></tr>
         </tbody>
       </table>
     </div>

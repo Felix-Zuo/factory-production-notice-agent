@@ -1,17 +1,17 @@
 {
-  "issuer": "Factory Operations Office",
-  "send_to": ["Production", "Quality", "Warehouse", "Planning"],
+  "issuer": "Operations Office",
+  "send_to": ["Planning", "Owner", "Controls", "Fulfillment"],
   "default_priority": "normal",
-  "inspection_points": [
-    "Confirm material code and revision before release",
-    "Check routing capacity before batch start",
-    "Verify packaging label against customer requirement",
-    "Record first-piece inspection result"
+  "review_points": [
+    "Confirm subject ID and revision before release",
+    "Check step ownership and capacity before start",
+    "Verify fulfillment labels against requester requirement",
+    "Record required control gate before final release"
   ],
   "notice_sections": {
-    "materials": "Material Requirement",
-    "routing": "Process Routing",
-    "packaging": "Packaging Requirement",
-    "quality": "Quality Checkpoints"
+    "resources": "Resource Requirement",
+    "steps": "Execution Steps",
+    "fulfillment": "Fulfillment Requirement",
+    "controls": "Control Checkpoints"
   }
 }

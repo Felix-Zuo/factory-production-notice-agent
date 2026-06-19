@@ -1,12 +1,16 @@
-# Production Notice Generator Skill
+# Operations Notice Generator Skill
 
-Use this skill when an agent needs to turn a structured manufacturing work
-order into a production notice workbook and preview.
+Use this skill when an agent needs to turn a structured work package into an
+operations notice workbook and preview. The public demo supports manufacturing,
+warehouse, maintenance, service, and review workflows through the same contract.
 
 ## Required Input
 
 Provide a JSON object matching `config/notice_schema.json`. Use
-`sample_data/demo_notice_request.json` as the example shape.
+`sample_data/demo_notice_request.json` as the example shape. New integrations
+should prefer `subject`, `resources`, `steps`, `fulfillment`, and `controls`;
+legacy integrations may still use `product`, `materials`, `routing`,
+`packaging`, and `quality`.
 
 ## Run
 
@@ -24,6 +28,7 @@ Then call:
 
 ```text
 POST http://127.0.0.1:8765/api/generate-notice
+POST http://127.0.0.1:8765/api/generate-operations-notice
 ```
 
 ## Output Handling
@@ -36,6 +41,6 @@ Read the manifest first. Then inspect:
 
 ## Safety
 
-Do not upload production BOM files, customer-specific data, generated notice
-history, or local executable packages into a public repository. Keep final
-production release behind human approval.
+Do not upload private BOM files, customer-specific data, supplier records,
+generated notice history, or local executable packages into a public repository.
+Keep final operational release behind human approval.

@@ -1,15 +1,41 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "ProductionNoticeRequest",
+  "title": "OperationsNoticeRequest",
   "type": "object",
-  "required": ["notice_id", "work_order", "product", "quantity", "due_date"],
+  "required": ["notice_id", "work_order", "quantity", "due_date"],
+  "anyOf": [
+    {"required": ["subject"]},
+    {"required": ["product"]}
+  ],
   "properties": {
     "notice_id": {"type": "string"},
+    "notice_type": {"type": "string"},
+    "domain": {"type": "string"},
     "work_order": {"type": "string"},
+    "requester": {"type": "string"},
     "customer": {"type": "string"},
     "priority": {"type": "string"},
     "quantity": {"type": "number"},
+    "quantity_unit": {"type": "string"},
     "due_date": {"type": "string"},
+    "subject": {
+      "type": "object",
+      "required": ["name"],
+      "anyOf": [
+        {"required": ["subject_id"]},
+        {"required": ["id"]},
+        {"required": ["item_code"]}
+      ],
+      "properties": {
+        "subject_id": {"type": "string"},
+        "item_code": {"type": "string"},
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "category": {"type": "string"},
+        "type": {"type": "string"},
+        "revision": {"type": "string"}
+      }
+    },
     "product": {
       "type": "object",
       "required": ["item_code", "name"],
@@ -20,9 +46,13 @@
         "revision": {"type": "string"}
       }
     },
+    "resources": {"type": "array"},
     "materials": {"type": "array"},
+    "steps": {"type": "array"},
     "routing": {"type": "array"},
+    "fulfillment": {"type": "object"},
     "packaging": {"type": "object"},
+    "controls": {"type": "object"},
     "quality": {"type": "object"},
     "notes": {"type": "array"}
   }

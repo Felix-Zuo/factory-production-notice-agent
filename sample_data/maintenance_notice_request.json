@@ -1,0 +1,41 @@
+{
+  "notice_id": "ON-2026-DEMO-003",
+  "notice_type": "Maintenance Notice",
+  "domain": "maintenance-service",
+  "work_order": "MNT-DEMO-240621",
+  "requester": "Demo Facilities Team",
+  "priority": "high",
+  "quantity": 3,
+  "quantity_unit": "assets",
+  "due_date": "2026-06-27",
+  "issuer": "Service Coordinator",
+  "subject": {
+    "subject_id": "ASSET-PUMP-DEMO",
+    "name": "Pump Inspection Round",
+    "category": "preventive maintenance",
+    "revision": "R0"
+  },
+  "resources": [
+    {"resource_id": "TOOL-TORQUE-010", "name": "Torque Tool", "quantity_per": 1, "unit": "set", "source": "Tool Crib"},
+    {"resource_id": "DOC-CHECK-020", "name": "Inspection Checklist", "quantity_per": 1, "unit": "sheet", "source": "Document Control"}
+  ],
+  "steps": [
+    {"step": "M10", "owner": "Technician", "instruction": "Lock out and verify safe access", "target_time_min": 8},
+    {"step": "M20", "owner": "Technician", "instruction": "Inspect coupling, seal area, and vibration reading", "target_time_min": 18},
+    {"step": "M30", "owner": "Supervisor", "instruction": "Review checklist and close work package", "target_time_min": 6}
+  ],
+  "fulfillment": {
+    "method": "Signed checklist + service record",
+    "units_per_container": 1,
+    "containers_per_batch": 3,
+    "label_rule": "Asset ID and date on checklist header"
+  },
+  "controls": {
+    "approval_required": true,
+    "review_rule": "Supervisor review before closeout",
+    "critical_controls": ["lockout confirmation", "asset ID", "closeout signature"]
+  },
+  "notes": [
+    "Synthetic maintenance sample for cross-domain demo coverage."
+  ]
+}

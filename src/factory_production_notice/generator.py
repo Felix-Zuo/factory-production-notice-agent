@@ -78,7 +78,7 @@ def generate_notice(payload: dict[str, Any], output_dir: str | Path) -> Generate
 def build_workbook(notice: ProductionNotice) -> Workbook:
     wb = Workbook()
     ws = wb.active
-    ws.title = "Production Notice"
+    ws.title = "Operations Notice"
     ws.sheet_view.showGridLines = False
 
     widths = [13, 18, 16, 14, 14, 14, 16, 16]
@@ -93,7 +93,7 @@ def build_workbook(notice: ProductionNotice) -> Workbook:
 
     ws.merge_cells("A1:H1")
     title = ws["A1"]
-    title.value = "PRODUCTION NOTICE"
+    title.value = notice.notice_type.upper()
     title.font = Font(color="FFFFFF", bold=True, size=18)
     title.fill = title_fill
     title.alignment = Alignment(horizontal="center", vertical="center")
@@ -101,8 +101,8 @@ def build_workbook(notice: ProductionNotice) -> Workbook:
 
     rows = [
         ("Notice ID", notice.notice_id, "Work Order", notice.work_order, "Priority", notice.priority, "Due Date", notice.due_date),
-        ("Customer", notice.customer, "Issuer", notice.issuer, "Quantity", notice.quantity, "Revision", notice.product.revision),
-        ("Item Code", notice.product.item_code, "Product", notice.product.name, "Model", notice.product.model, "", ""),
+        ("Requester", notice.customer, "Issuer", notice.issuer, "Quantity", f"{notice.quantity:g} {notice.quantity_unit}", "Revision", notice.product.revision),
+        ("Subject ID", notice.product.item_code, "Subject", notice.product.name, "Category", notice.product.model, "", ""),
     ]
     start_row = 3
     for row_index, row_values in enumerate(rows, start=start_row):
@@ -139,8 +139,8 @@ def write_section_header(ws, row: int, label: str, fill: PatternFill) -> None:
 
 
 def write_materials(ws, notice: ProductionNotice, start: int, fill: PatternFill, border: Border) -> int:
-    write_section_header(ws, start, "Material Requirement", fill)
-    headers = ["Item Code", "Material", "Qty / Unit", "Order Qty", "Unit", "Source", "", ""]
+    write_section_header(ws, start, "Resource Requirement", fill)
+    headers = ["Resource ID", "Resource", "Qty / Unit", "Required Qty", "Unit", "Source", "", ""]
     for col, value in enumerate(headers, start=1):
         cell = ws.cell(row=start + 1, column=col, value=value)
         cell.font = Font(bold=True)
@@ -164,8 +164,8 @@ def write_materials(ws, notice: ProductionNotice, start: int, fill: PatternFill,
 
 
 def write_routing(ws, notice: ProductionNotice, start: int, fill: PatternFill, border: Border) -> int:
-    write_section_header(ws, start, "Process Routing", fill)
-    headers = ["Step", "Work Center", "Description", "Cycle Time Sec", "", "", "", ""]
+    write_section_header(ws, start, "Execution Steps", fill)
+    headers = ["Step", "Owner / Station", "Instruction", "Target Time Sec", "", "", "", ""]
     for col, value in enumerate(headers, start=1):
         cell = ws.cell(row=start + 1, column=col, value=value)
         cell.font = Font(bold=True)
@@ -180,15 +180,16 @@ def write_routing(ws, notice: ProductionNotice, start: int, fill: PatternFill, b
 
 
 def write_packaging_quality(ws, notice: ProductionNotice, start: int, fill: PatternFill, border: Border) -> int:
-    write_section_header(ws, start, "Packaging and Quality", fill)
+    write_section_header(ws, start, "Fulfillment and Controls", fill)
+    control_checks = notice.quality.get("critical_checks", notice.quality.get("critical_controls", []))
     rows = [
-        ("Packaging Method", notice.packaging.get("method", "")),
-        ("Units / Carton", notice.packaging.get("units_per_carton", "")),
-        ("Cartons / Pallet", notice.packaging.get("cartons_per_pallet", "")),
+        ("Fulfillment Method", notice.packaging.get("method", "")),
+        ("Units / Container", notice.packaging.get("units_per_carton", notice.packaging.get("units_per_container", ""))),
+        ("Containers / Batch", notice.packaging.get("cartons_per_pallet", notice.packaging.get("containers_per_batch", ""))),
         ("Label Rule", notice.packaging.get("label_rule", "")),
-        ("First Piece Required", str(notice.quality.get("first_piece_required", ""))),
-        ("Sampling Rule", notice.quality.get("sampling_rule", "")),
-        ("Critical Checks", ", ".join(notice.quality.get("critical_checks", []))),
+        ("Gate Required", str(notice.quality.get("first_piece_required", notice.quality.get("approval_required", "")))),
+        ("Sampling / Review Rule", notice.quality.get("sampling_rule", notice.quality.get("review_rule", ""))),
+        ("Critical Checks", ", ".join(str(item) for item in control_checks)),
     ]
     row = start + 1
     for label, value in rows:
@@ -203,7 +204,7 @@ def write_packaging_quality(ws, notice: ProductionNotice, start: int, fill: Patt
 def write_notes(ws, notice: ProductionNotice, start: int, fill: PatternFill, border: Border) -> int:
     write_section_header(ws, start, "Release Notes", fill)
     row = start + 1
-    notes = notice.notes or ["Review and approve before releasing to production."]
+    notes = notice.notes or ["Review and approve before releasing to operations."]
     for note in notes:
         ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=8)
         ws.cell(row=row, column=1, value=f"- {note}").border = border
@@ -212,24 +213,26 @@ def write_notes(ws, notice: ProductionNotice, start: int, fill: PatternFill, bor
 
 
 def render_html(notice: ProductionNotice) -> str:
-    material_rows = "\n".join(
+    resource_rows = "\n".join(
         f"<tr><td>{esc(line.item_code)}</td><td>{esc(line.name)}</td><td>{line.quantity_per}</td>"
         f"<td>{line.quantity_per * notice.quantity:g}</td><td>{esc(line.unit)}</td><td>{esc(line.source)}</td></tr>"
         for line in notice.materials
     )
-    routing_rows = "\n".join(
+    step_rows = "\n".join(
         f"<tr><td>{esc(step.step)}</td><td>{esc(step.work_center)}</td><td>{esc(step.description)}</td>"
         f"<td>{step.cycle_time_sec:g}</td></tr>"
         for step in notice.routing
     )
-    checks = ", ".join(str(item) for item in notice.quality.get("critical_checks", []))
-    notes = "\n".join(f"<li>{esc(note)}</li>" for note in notice.notes)
+    control_checks = notice.quality.get("critical_checks", notice.quality.get("critical_controls", []))
+    checks = ", ".join(str(item) for item in control_checks)
+    html_notes = notice.notes or ["Review and approve before releasing to operations."]
+    notes = "\n".join(f"<li>{esc(note)}</li>" for note in html_notes)
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{esc(notice.notice_id)} Production Notice</title>
+  <title>{esc(notice.notice_id)} {esc(notice.notice_type)}</title>
   <style>
     :root {{
       --ink: #172033;
@@ -320,8 +323,8 @@ def render_html(notice: ProductionNotice) -> str:
   <main>
     <header>
       <div>
-        <h1>Production Notice</h1>
-        <div class="subtitle">Manufacturing release sheet / work order coordination</div>
+        <h1>{esc(notice.notice_type)}</h1>
+        <div class="subtitle">Structured work package / operations coordination</div>
       </div>
       <div class="status">
         <span>Priority</span>
@@ -333,32 +336,32 @@ def render_html(notice: ProductionNotice) -> str:
       <section class="grid">
         {field("Notice ID", notice.notice_id)}
         {field("Work Order", notice.work_order)}
-        {field("Customer", notice.customer)}
+        {field("Requester", notice.customer)}
         {field("Issuer", notice.issuer)}
-        {field("Product", notice.product.name)}
-        {field("Item Code", notice.product.item_code)}
-        {field("Model / Revision", f"{notice.product.model} / {notice.product.revision}")}
-        {field("Quantity", f"{notice.quantity:g} pcs")}
+        {field("Subject", notice.product.name)}
+        {field("Subject ID", notice.product.item_code)}
+        {field("Category / Revision", f"{notice.product.model} / {notice.product.revision}")}
+        {field("Quantity", f"{notice.quantity:g} {notice.quantity_unit}")}
       </section>
-      <h2>Material Requirement</h2>
-      <table><thead><tr><th>Item Code</th><th>Material</th><th>Qty / Unit</th><th>Order Qty</th><th>Unit</th><th>Source</th></tr></thead><tbody>{material_rows}</tbody></table>
-      <h2>Process Routing</h2>
-      <table><thead><tr><th>Step</th><th>Work Center</th><th>Description</th><th>Cycle Time Sec</th></tr></thead><tbody>{routing_rows}</tbody></table>
+      <h2>Resource Requirement</h2>
+      <table><thead><tr><th>Resource ID</th><th>Resource</th><th>Qty / Unit</th><th>Required Qty</th><th>Unit</th><th>Source</th></tr></thead><tbody>{resource_rows}</tbody></table>
+      <h2>Execution Steps</h2>
+      <table><thead><tr><th>Step</th><th>Owner / Station</th><th>Instruction</th><th>Target Time Sec</th></tr></thead><tbody>{step_rows}</tbody></table>
       <section class="two">
         <div>
-          <h2>Packaging</h2>
+          <h2>Fulfillment</h2>
           <div class="panel">
             <p><strong>Method:</strong> {esc(str(notice.packaging.get("method", "")))}</p>
-            <p><strong>Carton:</strong> {esc(str(notice.packaging.get("units_per_carton", "")))} units / carton</p>
-            <p><strong>Pallet:</strong> {esc(str(notice.packaging.get("cartons_per_pallet", "")))} cartons / pallet</p>
+            <p><strong>Container:</strong> {esc(str(notice.packaging.get("units_per_carton", notice.packaging.get("units_per_container", ""))))} units / container</p>
+            <p><strong>Batch:</strong> {esc(str(notice.packaging.get("cartons_per_pallet", notice.packaging.get("containers_per_batch", ""))))} containers / batch</p>
             <p><strong>Label:</strong> {esc(str(notice.packaging.get("label_rule", "")))}</p>
           </div>
         </div>
         <div>
-          <h2>Quality</h2>
+          <h2>Controls</h2>
           <div class="panel">
-            <p><strong>First Piece:</strong> {esc(str(notice.quality.get("first_piece_required", "")))}</p>
-            <p><strong>Sampling:</strong> {esc(str(notice.quality.get("sampling_rule", "")))}</p>
+            <p><strong>Gate:</strong> {esc(str(notice.quality.get("first_piece_required", notice.quality.get("approval_required", ""))))}</p>
+            <p><strong>Review:</strong> {esc(str(notice.quality.get("sampling_rule", notice.quality.get("review_rule", ""))))}</p>
             <p><strong>Checks:</strong> {esc(checks)}</p>
           </div>
         </div>
@@ -367,9 +370,9 @@ def render_html(notice: ProductionNotice) -> str:
       <ul>{notes}</ul>
       <section class="approval">
         <div class="stamp">Planning</div>
-        <div class="stamp">Production</div>
-        <div class="stamp">Quality</div>
-        <div class="stamp">Warehouse</div>
+        <div class="stamp">Owner</div>
+        <div class="stamp">Controls</div>
+        <div class="stamp">Fulfillment</div>
       </section>
     </div>
   </main>
