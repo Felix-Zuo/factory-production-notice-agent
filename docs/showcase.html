@@ -6,47 +6,44 @@
   <title>Structured Operations Notice Agent</title>
   <style>
     :root {
-      --ink: #151b22;
-      --muted: #5f6b78;
-      --line: #d9e1e8;
+      --ink: #172033;
+      --muted: #5d6b7c;
+      --line: #d8e1ea;
       --paper: #ffffff;
-      --bg: #f4f6f8;
+      --soft: #f5f7fa;
+      --charcoal: #111923;
       --teal: #0f766e;
-      --amber: #b45309;
-      --plum: #6d3f67;
-      --steel: #243447;
+      --amber: #a15c09;
+      --plum: #6e3f63;
+      --blue: #255b7a;
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       color: var(--ink);
-      background: var(--bg);
+      background: var(--soft);
       font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
     }
+    a { color: inherit; text-decoration: none; }
     .hero {
       position: relative;
-      min-height: 78vh;
+      min-height: 72vh;
       display: grid;
       align-items: end;
-      overflow: hidden;
       color: white;
-      background: #101820;
+      overflow: hidden;
+      background: var(--charcoal);
     }
-    .hero img {
+    .hero::before {
+      content: "";
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: .42;
-      filter: saturate(.9) contrast(1.04);
+      background:
+        linear-gradient(90deg, rgba(11, 18, 28, .92) 0%, rgba(11, 18, 28, .72) 48%, rgba(11, 18, 28, .36) 100%),
+        url("assets/screenshots/notice-output.png") center right / cover no-repeat;
     }
-    .shade {
-      position: absolute;
-      inset: 0;
-      background: rgba(13, 20, 28, .64);
-    }
-    nav {
+    .topbar {
       position: absolute;
       z-index: 2;
       top: 0;
@@ -56,209 +53,370 @@
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      padding: 24px clamp(22px, 5vw, 72px);
+      padding: 22px clamp(22px, 6vw, 76px);
     }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
-    .mark {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      min-width: 0;
+    }
+    .brand span:last-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
+    }
+    .brand-mark {
       display: grid;
       place-items: center;
-      width: 44px;
-      height: 44px;
-      border: 1px solid rgba(255,255,255,.35);
-      background: rgba(255,255,255,.12);
-    }
-    .lang { display: flex; gap: 8px; }
-    button {
-      border: 1px solid rgba(255,255,255,.42);
-      background: rgba(255,255,255,.12);
-      color: white;
-      padding: 8px 12px;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, .36);
       border-radius: 8px;
-      cursor: pointer;
+      background: rgba(255, 255, 255, .12);
+    }
+    .navlinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 14px;
       font-weight: 700;
     }
-    button.active { background: white; color: #17313c; }
+    .navlinks a,
+    .lang button {
+      min-height: 36px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, .34);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .1);
+      color: white;
+    }
+    .lang {
+      display: flex;
+      gap: 8px;
+    }
+    .lang button {
+      cursor: pointer;
+      font-weight: 800;
+      font-family: inherit;
+    }
+    .lang button.active {
+      color: #122331;
+      background: white;
+    }
     .hero-copy {
       position: relative;
-      z-index: 2;
-      width: min(980px, calc(100% - 44px));
+      z-index: 1;
+      width: min(1080px, calc(100% - 44px));
       margin: 0 auto;
-      padding: 132px 0 64px;
+      padding: 134px 0 62px;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: #b7cfe0;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
     }
     h1 {
       margin: 0;
-      max-width: 860px;
-      font-size: clamp(38px, 6vw, 76px);
-      line-height: 1.02;
+      max-width: 820px;
+      font-size: 64px;
+      line-height: 1.04;
       letter-spacing: 0;
     }
     .lead {
       margin: 22px 0 0;
-      max-width: 760px;
-      color: #e2edf2;
-      font-size: clamp(17px, 2vw, 22px);
-      line-height: 1.55;
+      max-width: 720px;
+      color: #e4edf5;
+      font-size: 21px;
+      line-height: 1.58;
     }
-    .pills {
+    .badges {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 28px;
     }
-    .pill {
+    .badge {
       padding: 8px 11px;
-      border: 1px solid rgba(255,255,255,.28);
-      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255, 255, 255, .26);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .11);
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
     }
-    main { padding: 42px clamp(22px, 5vw, 72px) 76px; }
+    main { padding: 42px clamp(22px, 6vw, 76px) 74px; }
     .section { max-width: 1180px; margin: 0 auto 44px; }
-    h2 { margin: 0 0 18px; font-size: 30px; letter-spacing: 0; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+    h2 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+    .section-head p,
+    .body-copy {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
     }
     .card {
-      min-height: 142px;
+      min-height: 156px;
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--paper);
     }
-    .card h3 { margin: 0 0 10px; font-size: 17px; }
-    .card p { margin: 0; color: var(--muted); line-height: 1.58; }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .accent-teal { border-top: 4px solid var(--teal); }
+    .accent-amber { border-top: 4px solid var(--amber); }
+    .accent-plum { border-top: 4px solid var(--plum); }
+    .accent-blue { border-top: 4px solid var(--blue); }
     .band {
       display: grid;
-      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
-      gap: 24px;
+      grid-template-columns: minmax(0, .9fr) minmax(400px, 1.1fr);
+      gap: 26px;
       align-items: center;
       padding: 28px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: white;
     }
-    .band p { color: var(--muted); line-height: 1.7; margin: 0 0 14px; }
-    .band img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 8px; }
+    .band img {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #eef3f7;
+    }
     .metrics {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 22px;
     }
     .metric {
+      min-height: 84px;
       padding: 14px;
       border: 1px solid var(--line);
-      background: #f8fafb;
+      border-radius: 8px;
+      background: #f8fafc;
     }
-    .metric strong { display: block; color: var(--steel); font-size: 26px; }
-    .metric span { color: var(--muted); font-size: 13px; }
+    .metric strong {
+      display: block;
+      color: var(--charcoal);
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
     code {
       display: block;
+      margin-top: 18px;
       padding: 16px;
-      color: #eaf1f6;
-      background: #121a24;
+      color: #e7eff7;
+      background: #121b26;
       border-radius: 8px;
       line-height: 1.58;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
-    .accent-teal { border-top: 4px solid var(--teal); }
-    .accent-amber { border-top: 4px solid var(--amber); }
-    .accent-plum { border-top: 4px solid var(--plum); }
-    .accent-steel { border-top: 4px solid var(--steel); }
-    .lang-block[data-lang="en"] .zh,
-    .lang-block[data-lang="zh"] .en { display: none; }
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .step {
+      min-height: 136px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      color: white;
+      background: var(--blue);
+      font-weight: 800;
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .step span {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .lang-root[data-lang="en"] .zh,
+    .lang-root[data-lang="zh"] .en { display: none; }
     @media (max-width: 980px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .section-head { align-items: start; flex-direction: column; }
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .band { grid-template-columns: 1fr; padding: 22px; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      h1 { font-size: 48px; }
     }
     @media (max-width: 620px) {
-      nav { align-items: flex-start; flex-direction: column; }
-      .grid, .metrics { grid-template-columns: 1fr; }
-      .hero { min-height: 86vh; }
+      .topbar { padding: 18px 22px; }
+      .brand {
+        align-items: flex-start;
+        width: 100%;
+      }
+      .brand span:last-child { font-size: 14px; }
+      .navlinks {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+      }
+      .navlinks a,
+      .lang button { text-align: center; }
+      .lang {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+      .lang button { flex: 1; }
+      .grid,
+      .metrics,
+      .timeline { grid-template-columns: 1fr; }
+      .hero { min-height: 78vh; }
+      .hero-copy { padding-top: 232px; }
+      h1 { font-size: 38px; }
+      .lead { font-size: 18px; }
+      main { padding-bottom: 46px; }
     }
   </style>
 </head>
-<body class="lang-block" data-lang="zh">
+<body class="lang-root" data-lang="zh">
   <header class="hero">
-    <img src="assets/notice-preview.svg" alt="Operations notice workbook preview">
-    <div class="shade"></div>
-    <nav>
-      <div class="brand"><div class="mark">ON</div><div>Structured Operations Notice Agent</div></div>
-      <div class="lang">
-        <button class="active" data-set-lang="zh">中文</button>
-        <button data-set-lang="en">English</button>
+    <div class="topbar">
+      <a class="brand" href="#top" aria-label="Structured Operations Notice Agent">
+        <span class="brand-mark">ON</span>
+        <span>Structured Operations Notice Agent</span>
+      </a>
+      <div class="navlinks">
+        <a href="#profiles">Profiles</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#quality">Quality</a>
+        <span class="lang">
+          <button class="active" type="button" data-set-lang="zh">中文</button>
+          <button type="button" data-set-lang="en">EN</button>
+        </span>
       </div>
-    </nav>
-    <section class="hero-copy">
+    </div>
+    <section id="top" class="hero-copy">
+      <p class="eyebrow">v0.3.0 · local-first · contract-driven</p>
       <h1 class="zh">结构化作业通知工作台</h1>
       <h1 class="en">Structured Operations Notice Workbench</h1>
-      <p class="lead zh">把工单、资源、步骤、履约和控制点收敛成一份可审核的通知包，输出 Excel、网页预览、manifest 和 agent context。</p>
-      <p class="lead en">Convert work orders, resources, steps, fulfillment rules, and controls into review-ready Excel, preview, manifest, and agent context artifacts.</p>
-      <div class="pills">
-        <span class="pill">manufacturing</span>
-        <span class="pill">warehouse</span>
-        <span class="pill">maintenance</span>
-        <span class="pill">service</span>
-        <span class="pill">compliance</span>
+      <p class="lead zh">把工单、资源、步骤、履约规则和控制点转换成可审核的 Excel、网页预览、manifest 和 agent context，适用于制造、仓储、维修、现场服务和合规审查。</p>
+      <p class="lead en">Convert work orders, resources, steps, fulfillment rules, and controls into review-ready Excel, preview, manifest, and agent context artifacts for manufacturing, warehouse, maintenance, service, and compliance workflows.</p>
+      <div class="badges">
+        <span class="badge">JSON contract</span>
+        <span class="badge">CSV adapter</span>
+        <span class="badge">5 scenario profiles</span>
+        <span class="badge">human review gate</span>
       </div>
     </section>
   </header>
 
   <main>
-    <section class="section">
-      <h2 class="zh">适用场景</h2>
-      <h2 class="en">Use Cases</h2>
+    <section id="profiles" class="section">
+      <div class="section-head">
+        <h2 class="zh">跨场景 Profile</h2>
+        <h2 class="en">Scenario Profiles</h2>
+        <p class="zh">公开版本不绑定单一品类，profile 只提供场景默认语义，核心契约保持通用。</p>
+        <p class="en">The public build is not tied to one product category. Profiles provide scenario semantics while the core contract stays generic.</p>
+      </div>
       <div class="grid">
         <article class="card accent-teal">
-          <h3 class="zh">制造发布</h3><h3 class="en">Manufacturing Release</h3>
-          <p class="zh">保留生产通知单、物料、工艺路线、包装和质检字段的兼容能力。</p>
-          <p class="en">Keeps compatibility with production notices, materials, routing, packaging, and quality checks.</p>
+          <h3>Warehouse Fulfillment</h3>
+          <p class="zh">拣配、标签、容器、批次和出库检查。</p>
+          <p class="en">Picking, labels, containers, batches, and dispatch checks.</p>
+        </article>
+        <article class="card accent-blue">
+          <h3>Manufacturing Release</h3>
+          <p class="zh">兼容生产通知、资源、工艺步骤和质量门禁。</p>
+          <p class="en">Compatible with production notices, resources, routing steps, and quality gates.</p>
         </article>
         <article class="card accent-amber">
-          <h3 class="zh">仓储履约</h3><h3 class="en">Warehouse Fulfillment</h3>
-          <p class="zh">把拣配、标签、容器、批次和出库检查放入同一份作业通知。</p>
-          <p class="en">Coordinates picking, labels, containers, batch rules, and dispatch checks in one notice.</p>
+          <h3>Maintenance Service</h3>
+          <p class="zh">设备、备件、工具、作业窗口和关闭证据。</p>
+          <p class="en">Assets, spare parts, tools, service windows, and closeout evidence.</p>
         </article>
         <article class="card accent-plum">
-          <h3 class="zh">维修服务</h3><h3 class="en">Maintenance Service</h3>
-          <p class="zh">用 subject、resources 和 steps 表达设备、备件、工具和现场执行步骤。</p>
-          <p class="en">Uses subject, resources, and steps for assets, spare parts, tools, and field execution.</p>
-        </article>
-        <article class="card accent-steel">
-          <h3 class="zh">审核闭环</h3><h3 class="en">Review Loop</h3>
-          <p class="zh">生成器只准备发布包，最终放行保留给人工审批和真实系统边界。</p>
-          <p class="en">The generator prepares release artifacts while final approval stays with a human gate.</p>
+          <h3>Compliance Review</h3>
+          <p class="zh">证据清单、审批轨迹、留存规则和审查结论。</p>
+          <p class="en">Evidence lists, approval trails, retention rules, and review outcomes.</p>
         </article>
       </div>
     </section>
 
-    <section class="section band">
+    <section id="workflow" class="section band">
       <div>
-        <h2 class="zh">通用契约</h2>
-        <h2 class="en">Generic Contract</h2>
-        <p class="zh">v0.2 契约优先使用 subject、resources、steps、fulfillment 和 controls，同时兼容 product、materials、routing、packaging 和 quality。</p>
-        <p class="en">The v0.2 contract prefers subject, resources, steps, fulfillment, and controls while keeping product, materials, routing, packaging, and quality aliases working.</p>
-        <code>python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output</code>
-      </div>
-      <img src="assets/agent-interface.svg" alt="Agent contract diagram">
-    </section>
-
-    <section class="section band">
-      <div>
-        <h2 class="zh">可交付产物</h2>
-        <h2 class="en">Artifacts</h2>
-        <p class="zh">同一个 JSON 请求生成四类产物：Excel 作业通知、浏览器预览、发布 manifest、以及给下游 agent 分析使用的结构化上下文。</p>
-        <p class="en">One JSON request produces four artifact types: workbook, browser preview, manifest, and structured context for downstream agents.</p>
+        <h2 class="zh">从导入到发布包</h2>
+        <h2 class="en">From Import To Release Packet</h2>
+        <p class="body-copy zh">CSV 适配器把表格型 work package 按 `notice_id` 聚合为标准 JSON。生成器随后输出 Excel、HTML、manifest 和给下游 agent 使用的上下文。</p>
+        <p class="body-copy en">The CSV adapter groups tabular work-package rows by `notice_id` into standard JSON. The generator then emits Excel, HTML, manifest, and downstream agent context.</p>
         <div class="metrics">
-          <div class="metric"><strong>4</strong><span class="zh">产物类型</span><span class="en">artifact types</span></div>
-          <div class="metric"><strong>2</strong><span class="zh">API 路径</span><span class="en">API paths</span></div>
-          <div class="metric"><strong>5</strong><span class="zh">场景族</span><span class="en">scenario families</span></div>
+          <div class="metric"><strong>5</strong><span class="zh">内置场景族</span><span class="en">built-in profile families</span></div>
+          <div class="metric"><strong>4</strong><span class="zh">交付产物类型</span><span class="en">artifact types</span></div>
+          <div class="metric"><strong>0</strong><span class="zh">默认外部服务依赖</span><span class="en">external services by default</span></div>
         </div>
+        <code>operations-notice import-csv --input sample_data/csv/work_package_notices.csv --output-dir output/imported
+operations-notice generate --input output/imported/ON-2026-CSV-001.json --output output</code>
       </div>
-      <img src="assets/workflow.svg" alt="Operations notice workflow">
+      <img src="assets/screenshots/agent-contract.png" alt="Automation contract preview">
+    </section>
+
+    <section id="quality" class="section">
+      <div class="section-head">
+        <h2 class="zh">成熟度信号</h2>
+        <h2 class="en">Maturity Signals</h2>
+        <p class="zh">仓库把安全默认值、验证门禁、CI、发布记录和贡献材料作为产品的一部分维护。</p>
+        <p class="en">The repository treats safety defaults, validation gates, CI, release notes, and contribution materials as part of the product.</p>
+      </div>
+      <div class="timeline">
+        <div class="step"><span class="step-number">1</span><strong>Preflight</strong><span class="zh">验证必填字段、数值、布尔值和导入契约。</span><span class="en">Validates required fields, numbers, booleans, and import contracts.</span></div>
+        <div class="step"><span class="step-number">2</span><strong>Spreadsheet Safety</strong><span class="zh">写入 Excel 前转义公式型文本和控制字符。</span><span class="en">Escapes formula-like text and control characters before writing Excel.</span></div>
+        <div class="step"><span class="step-number">3</span><strong>Local Boundary</strong><span class="zh">本地 API 默认只绑定 loopback，避免误暴露。</span><span class="en">The local API binds to loopback by default to avoid accidental exposure.</span></div>
+        <div class="step"><span class="step-number">4</span><strong>CI Gate</strong><span class="zh">自动覆盖测试、样例验证、导入、生成和包内容检查。</span><span class="en">CI covers tests, sample validation, import, generation, and package checks.</span></div>
+        <div class="step"><span class="step-number">5</span><strong>Human Approval</strong><span class="zh">工具准备发布包，真实作业放行仍由人工确认。</span><span class="en">The tool prepares release packets while real operational release stays human-approved.</span></div>
+      </div>
     </section>
   </main>
 
@@ -266,8 +424,10 @@
     const root = document.body;
     document.querySelectorAll("[data-set-lang]").forEach((button) => {
       button.addEventListener("click", () => {
-        root.dataset.lang = button.dataset.setLang;
-        document.querySelectorAll("[data-set-lang]").forEach((item) => item.classList.toggle("active", item === button));
+        root.dataset.lang = button.dataset.setLang || "zh";
+        document.querySelectorAll("[data-set-lang]").forEach((item) => {
+          item.classList.toggle("active", item === button);
+        });
       });
     });
   </script>

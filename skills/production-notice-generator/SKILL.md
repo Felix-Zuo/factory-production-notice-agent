@@ -12,9 +12,16 @@ should prefer `subject`, `resources`, `steps`, `fulfillment`, and `controls`;
 legacy integrations may still use `product`, `materials`, `routing`,
 `packaging`, and `quality`.
 
+For tabular work-package exports, import CSV rows first:
+
+```powershell
+python -m factory_production_notice.cli import-csv --input sample_data\csv\work_package_notices.csv --output-dir output\imported
+```
+
 ## Run
 
 ```powershell
+python -m factory_production_notice.cli profiles
 python -m factory_production_notice.cli validate --input sample_data\demo_notice_request.json
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```

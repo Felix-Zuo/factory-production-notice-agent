@@ -3,6 +3,8 @@
 ## Release Checklist
 
 - Run `python -m pytest -q`.
+- Run `operations-notice profiles`.
+- Run `operations-notice import-csv --input sample_data\csv\work_package_notices.csv --output-dir output_import_probe`.
 - Run `operations-notice validate --input sample_data\demo_notice_request.json`.
 - Run `scripts\run_demo.cmd` from a clean checkout or virtual environment.
 - Run `python scripts\verify_package.py output_package_probe\factory-production-notice-agent.zip` after packaging.
@@ -17,6 +19,8 @@
 
 - The sample data must be synthetic.
 - The README should show the generic operations contract first.
+- The CSV adapter should convert synthetic work-package rows into validated JSON
+  without writing generated artifacts into source-controlled directories.
 - The manufacturing legacy path should still be tested.
 - The local API should return structured JSON for both success and invalid
   request cases.

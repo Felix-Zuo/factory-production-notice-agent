@@ -4,18 +4,21 @@
 [![Release](https://img.shields.io/github/v/release/Felix-Zuo/factory-production-notice-agent)](https://github.com/Felix-Zuo/factory-production-notice-agent/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Local-first work-package generator for teams that need a repeatable notice,
+Local-first work-package workbench for teams that need a repeatable notice,
 review, and release workflow. The repository keeps the original
 `factory-production-notice-agent` name for continuity, but the public contract is
 now generic enough for manufacturing release, warehouse fulfillment,
 maintenance, field service, and compliance review scenarios.
 
-![Operations notice preview](docs/assets/notice-preview.svg)
+![Operations notice preview](docs/assets/screenshots/notice-output.png)
 
 ## What It Does
 
 - Turns a structured JSON request into an Excel workbook, browser preview,
   manifest, and agent-readable context.
+- Converts tabular CSV work-package exports into validated notice request JSON.
+- Ships built-in scenario profiles for warehouse, manufacturing, maintenance,
+  field dispatch, and compliance review workflows.
 - Supports generic `subject`, `resources`, `steps`, `fulfillment`, and
   `controls` fields while preserving legacy manufacturing aliases.
 - Keeps generated artifacts local by default and keeps final release behind a
@@ -23,9 +26,22 @@ maintenance, field service, and compliance review scenarios.
 - Exposes both CLI and local HTTP entry points for workflow automation demos.
 - Uses only synthetic public sample data.
 
+## Product Workflow
+
+```powershell
+python -m factory_production_notice.cli profiles
+python -m factory_production_notice.cli import-csv --input sample_data\csv\work_package_notices.csv --output-dir output\imported
+python -m factory_production_notice.cli validate --input output\imported\ON-2026-CSV-001.json
+python -m factory_production_notice.cli generate --input output\imported\ON-2026-CSV-001.json --output output
+```
+
+The CSV adapter is intentionally conservative: it limits row and cell sizes,
+validates booleans and numbers, groups rows by `notice_id`, and writes one JSON
+request per notice for downstream generation.
+
 ## Public Demo Contract
 
-The preferred v0.2 contract is intentionally cross-domain:
+The preferred v0.3 contract is intentionally cross-domain:
 
 ```json
 {
@@ -91,6 +107,7 @@ Additional synthetic scenarios:
 ```text
 sample_data\legacy_manufacturing_notice_request.json
 sample_data\maintenance_notice_request.json
+sample_data\csv\work_package_notices.csv
 ```
 
 ## Local API

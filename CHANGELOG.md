@@ -4,6 +4,27 @@ This changelog records the public demo evolution. Pre-public entries are
 reconstructed from sanitized implementation milestones so the repository tells a
 complete product story without exposing private operational data.
 
+## 0.3.0 - 2026-06-23
+
+### Added
+
+- Scenario profile catalog for warehouse fulfillment, manufacturing release,
+  maintenance service, field dispatch, and compliance review workflows.
+- `operations-notice profiles` command for listing built-in scenario profiles.
+- CSV work-package adapter with row/cell limits, boolean and number validation,
+  grouped notice export, and batch output support.
+- Synthetic batch CSV sample under `sample_data/csv/`.
+- Showcase page refresh focused on mature product positioning, artifact flow,
+  validation gates, and GitHub-ready project evidence.
+
+### Changed
+
+- Agent contract now advertises CSV import and scenario profile capabilities.
+- README workflow now starts from profile discovery, CSV import, validation, and
+  artifact generation.
+- CI exercises profile listing, CSV import, imported payload validation, and
+  generated artifacts.
+
 ## 0.2.1 - 2026-06-19
 
 ### Added

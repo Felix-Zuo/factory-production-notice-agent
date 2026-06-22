@@ -5,9 +5,11 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 from factory_production_notice.agent_contract import build_agent_interface
+from factory_production_notice.csv_adapter import CsvImportError, import_csv_notices
 from factory_production_notice.generator import generate_notice
 from factory_production_notice.io_utils import read_json
 from factory_production_notice.models import NoticeValidationError, ProductionNotice
+from factory_production_notice.profiles import profile_catalog
 from factory_production_notice.server import is_loopback_host
 from factory_production_notice.validation import validate_notice_payload
 from scripts.package_project import should_skip
@@ -39,7 +41,51 @@ def test_agent_interface_shape() -> None:
     assert "generate_operations_notice" in capability_names
     assert "generate_notice" in capability_names
     assert "validate_notice" in capability_names
+    assert "import_csv_work_packages" in capability_names
+    assert "list_scenario_profiles" in capability_names
     assert spec["input_contract"]["sample_path"].endswith("demo_notice_request.json")
+
+
+def test_profile_catalog_lists_cross_domain_profiles() -> None:
+    catalog = profile_catalog()
+    profile_ids = {item["id"] for item in catalog["profiles"]}
+
+    assert catalog["count"] == 5
+    assert "warehouse-fulfillment" in profile_ids
+    assert "maintenance-service" in profile_ids
+    assert "compliance-review" in profile_ids
+
+
+def test_csv_adapter_imports_batch_sample() -> None:
+    notices = import_csv_notices("sample_data/csv/work_package_notices.csv")
+
+    assert len(notices) == 2
+    assert notices[0]["domain"] == "maintenance-service"
+    assert notices[0]["subject"]["subject_id"] == "ASSET-PUMP-LINE-2"
+    assert len(notices[0]["resources"]) == 3
+    assert len(notices[0]["steps"]) == 3
+    assert notices[0]["controls"]["approval_required"] is True
+    assert "lockout" in notices[0]["controls"]["critical_controls"]
+
+
+def test_csv_adapter_rejects_invalid_boolean(tmp_path: Path) -> None:
+    source = tmp_path / "bad.csv"
+    source.write_text(
+        "\n".join(
+            [
+                "notice_id,work_order,quantity,due_date,subject_id,subject_name,approval_required",
+                "ON-BAD-CSV,WO-BAD,1,2026-06-30,SUBJ,Bad CSV,maybe",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    try:
+        import_csv_notices(source)
+    except CsvImportError as exc:
+        assert "approval_required must be true or false" in str(exc)
+    else:
+        raise AssertionError("Expected CsvImportError")
 
 
 def test_legacy_manufacturing_payload_still_works(tmp_path: Path) -> None:

@@ -1,0 +1,44 @@
+{
+  "profiles": [
+    {
+      "id": "warehouse-fulfillment",
+      "label": "Warehouse Fulfillment",
+      "notice_type": "Operations Notice",
+      "domain": "warehouse-fulfillment",
+      "artifact_focus": ["pick list", "label control", "dispatch manifest"],
+      "review_gates": ["manifest sample scan", "outbound lane count", "label match"]
+    },
+    {
+      "id": "manufacturing-release",
+      "label": "Manufacturing Release",
+      "notice_type": "Production Notice",
+      "domain": "manufacturing-release",
+      "artifact_focus": ["material requirement", "routing release", "quality gate"],
+      "review_gates": ["first piece approval", "revision check", "packaging rule"]
+    },
+    {
+      "id": "maintenance-service",
+      "label": "Maintenance Service",
+      "notice_type": "Maintenance Notice",
+      "domain": "maintenance-service",
+      "artifact_focus": ["asset work package", "tooling list", "closeout checklist"],
+      "review_gates": ["lockout confirmation", "supervisor review", "service record"]
+    },
+    {
+      "id": "field-dispatch",
+      "label": "Field Dispatch",
+      "notice_type": "Dispatch Notice",
+      "domain": "field-dispatch",
+      "artifact_focus": ["task packet", "crew handoff", "customer-ready summary"],
+      "review_gates": ["route confirmation", "parts check", "completion evidence"]
+    },
+    {
+      "id": "compliance-review",
+      "label": "Compliance Review",
+      "notice_type": "Review Notice",
+      "domain": "compliance-review",
+      "artifact_focus": ["evidence list", "review steps", "approval trail"],
+      "review_gates": ["evidence completeness", "reviewer signoff", "retention rule"]
+    }
+  ]
+}

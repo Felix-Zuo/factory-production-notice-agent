@@ -1,12 +1,16 @@
 # Architecture
 
 Structured Operations Notice Agent is a contract-first generator. It accepts a
-small JSON work-package request, validates the minimum release fields, and emits
-reviewable local artifacts.
+small JSON work-package request or a tabular CSV work-package export, validates
+the minimum release fields, and emits reviewable local artifacts.
 
 ## Components
 
 - `models.py`: parses the request into a normalized notice model.
+- `profiles.py`: exposes built-in scenario profiles for common operations
+  workflows.
+- `csv_adapter.py`: converts bounded CSV work-package rows into normalized JSON
+  request files.
 - `generator.py`: creates the Excel workbook, HTML preview, manifest, and agent
   context.
 - `cli.py`: exposes deterministic command-line entry points.
@@ -17,7 +21,8 @@ reviewable local artifacts.
 ## Data Flow
 
 ```text
-JSON request
+Scenario profile or CSV export
+  -> normalized JSON request
   -> normalized notice model
   -> workbook + HTML preview
   -> manifest + agent context
@@ -26,7 +31,7 @@ JSON request
 
 ## Contract Strategy
 
-The v0.2 public contract uses neutral operations vocabulary:
+The v0.3 public contract uses neutral operations vocabulary:
 
 - `subject`: the thing or job being coordinated
 - `resources`: material, document, tool, label, or kit requirements

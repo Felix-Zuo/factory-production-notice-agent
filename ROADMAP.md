@@ -3,7 +3,7 @@
 The roadmap is intentionally public-demo friendly. Items describe reusable
 product direction, not private customer commitments.
 
-## Current Release: 0.2.1
+## Current Release: 0.3.0
 
 - Keep the generator local-first and deterministic.
 - Preserve compatibility with manufacturing production-notice payloads.
@@ -13,24 +13,22 @@ product direction, not private customer commitments.
 - Validate sample payloads, artifact generation, and package contents in CI.
 - Keep local API binding loopback-only unless explicitly overridden.
 - Escape formula-like values before writing spreadsheet cells.
+- Provide built-in scenario profiles for common operations workflows.
+- Convert CSV work-package rows into validated JSON notice requests.
+- Keep the showcase page aligned with the current product surface.
 
-## Next: 0.3.x
+## Next: 0.4.x
 
-- Add more sample adapters:
-  - CSV to operations notice request
-  - ERP/MES-style work order export
-  - ticket or service-task export
 - Add richer review flags in `agent_context.json`, including missing owner,
   missing control gate, and unusually high quantity checks.
-- Add a lightweight static demo page for multiple scenarios.
+- Add optional ERP/MES-style and ticket export adapters as examples.
+- Add static generated examples for each built-in scenario profile.
 
 ## Later
 
-- Add template profiles for manufacturing, warehouse, maintenance, service, and
-  compliance review.
 - Add signed manifest hashes for artifact integrity checks.
 - Add optional storage adapters while keeping the default demo file-based.
-- Add CI workflow for lint, unit tests, and package build.
+- Add optional lint/type checks once the public API surface stabilizes.
 
 ## Non-Goals
 
