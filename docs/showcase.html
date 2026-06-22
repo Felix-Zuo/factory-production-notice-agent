@@ -6,16 +6,17 @@
   <title>Structured Operations Notice Agent</title>
   <style>
     :root {
-      --ink: #172033;
-      --muted: #5d6b7c;
-      --line: #d8e1ea;
+      --ink: #101820;
+      --muted: #5f6f7d;
+      --line: #d9e2ea;
       --paper: #ffffff;
-      --soft: #f5f7fa;
-      --charcoal: #111923;
-      --teal: #0f766e;
-      --amber: #a15c09;
-      --plum: #6e3f63;
-      --blue: #255b7a;
+      --soft: #f6f8fb;
+      --dark: #0c1117;
+      --teal: #0f7b72;
+      --cyan: #2f7fb0;
+      --amber: #a45d0b;
+      --plum: #74436a;
+      --green: #2f7d52;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -26,26 +27,37 @@
       font-family: "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
     }
     a { color: inherit; text-decoration: none; }
+    .lang-root[data-lang="en"] .zh,
+    .lang-root[data-lang="zh"] .en { display: none; }
     .hero {
       position: relative;
-      min-height: 72vh;
+      min-height: 86vh;
       display: grid;
       align-items: end;
-      color: white;
       overflow: hidden;
-      background: var(--charcoal);
+      color: #fff;
+      background: var(--dark);
     }
     .hero::before {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(11, 18, 28, .92) 0%, rgba(11, 18, 28, .72) 48%, rgba(11, 18, 28, .36) 100%),
+        linear-gradient(90deg, rgba(7, 13, 18, .95) 0%, rgba(7, 13, 18, .78) 44%, rgba(7, 13, 18, .36) 100%),
         url("assets/screenshots/notice-output.png") center right / cover no-repeat;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 150px;
+      background: linear-gradient(180deg, rgba(246, 248, 251, 0), var(--soft));
     }
     .topbar {
       position: absolute;
-      z-index: 2;
+      z-index: 3;
       top: 0;
       left: 0;
       right: 0;
@@ -53,19 +65,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      padding: 22px clamp(22px, 6vw, 76px);
+      padding: 22px max(24px, calc((100vw - 1180px) / 2));
     }
     .brand {
       display: flex;
       align-items: center;
+      min-width: 0;
       gap: 12px;
-      font-weight: 800;
-      min-width: 0;
-    }
-    .brand span:last-child {
-      min-width: 0;
-      overflow-wrap: anywhere;
-      line-height: 1.2;
+      font-weight: 850;
     }
     .brand-mark {
       display: grid;
@@ -73,252 +80,389 @@
       width: 42px;
       height: 42px;
       flex: 0 0 auto;
-      border: 1px solid rgba(255, 255, 255, .36);
+      border: 1px solid rgba(255,255,255,.34);
       border-radius: 8px;
-      background: rgba(255, 255, 255, .12);
+      background: rgba(255,255,255,.12);
+    }
+    .brand-name {
+      min-width: 0;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
     }
     .navlinks {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
       justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 750;
     }
     .navlinks a,
     .lang button {
       min-height: 36px;
       padding: 8px 12px;
-      border: 1px solid rgba(255, 255, 255, .34);
+      border: 1px solid rgba(255,255,255,.3);
       border-radius: 8px;
-      background: rgba(255, 255, 255, .1);
-      color: white;
+      color: #fff;
+      background: rgba(255,255,255,.1);
+      font-family: inherit;
+      font-weight: 800;
     }
+    .navlinks a:hover,
+    .lang button:hover { background: rgba(255,255,255,.18); }
     .lang {
       display: flex;
       gap: 8px;
     }
     .lang button {
       cursor: pointer;
-      font-weight: 800;
-      font-family: inherit;
     }
     .lang button.active {
-      color: #122331;
-      background: white;
+      color: #12202b;
+      background: #fff;
     }
-    .hero-copy {
+    .hero-inner {
       position: relative;
-      z-index: 1;
-      width: min(1080px, calc(100% - 44px));
+      z-index: 2;
+      width: min(1180px, calc(100% - 48px));
       margin: 0 auto;
-      padding: 134px 0 62px;
+      padding: 136px 0 96px;
     }
     .eyebrow {
-      margin: 0 0 14px;
-      color: #b7cfe0;
-      font-size: 14px;
-      font-weight: 800;
+      margin: 0 0 16px;
+      color: #b9dce8;
+      font-size: 13px;
+      font-weight: 850;
       text-transform: uppercase;
     }
     h1 {
       margin: 0;
-      max-width: 820px;
-      font-size: 64px;
-      line-height: 1.04;
+      max-width: 790px;
+      font-size: 66px;
+      line-height: 1.03;
       letter-spacing: 0;
     }
     .lead {
-      margin: 22px 0 0;
+      margin: 24px 0 0;
       max-width: 720px;
-      color: #e4edf5;
+      color: #e5eef4;
       font-size: 21px;
-      line-height: 1.58;
+      line-height: 1.62;
     }
-    .badges {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 28px;
+      gap: 12px;
+      margin-top: 30px;
     }
-    .badge {
-      padding: 8px 11px;
-      border: 1px solid rgba(255, 255, 255, .26);
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 15px;
+      border: 1px solid rgba(255,255,255,.3);
       border-radius: 8px;
-      background: rgba(255, 255, 255, .11);
-      font-size: 14px;
-      font-weight: 800;
+      color: #fff;
+      background: rgba(255,255,255,.1);
+      font-weight: 850;
     }
-    main { padding: 42px clamp(22px, 6vw, 76px) 74px; }
-    .section { max-width: 1180px; margin: 0 auto 44px; }
+    .button.primary {
+      color: #101820;
+      background: #fff;
+    }
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 38px;
+      max-width: 920px;
+    }
+    .proof-item {
+      min-height: 78px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px;
+      background: rgba(255,255,255,.09);
+    }
+    .proof-item strong {
+      display: block;
+      margin-bottom: 7px;
+      color: #fff;
+      font-size: 18px;
+    }
+    .proof-item span {
+      color: #cddce6;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    main { padding: 48px max(24px, calc((100vw - 1180px) / 2)) 78px; }
+    .section { margin: 0 auto 54px; }
     .section-head {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       justify-content: space-between;
       gap: 24px;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
     h2 {
       margin: 0;
-      font-size: 32px;
-      line-height: 1.18;
+      font-size: 34px;
+      line-height: 1.17;
       letter-spacing: 0;
     }
     .section-head p,
     .body-copy {
       margin: 0;
+      max-width: 560px;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.72;
     }
-    .grid {
+    .artifact {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(330px, .85fr);
+      gap: 22px;
+      align-items: stretch;
     }
-    .card {
-      min-height: 156px;
+    .artifact-visual {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #eef3f7;
+    }
+    .artifact-visual img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 430px;
+      object-fit: cover;
+      object-position: top left;
+    }
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+    .panel {
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--paper);
     }
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      letter-spacing: 0;
-    }
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .accent-teal { border-top: 4px solid var(--teal); }
-    .accent-amber { border-top: 4px solid var(--amber); }
-    .accent-plum { border-top: 4px solid var(--plum); }
-    .accent-blue { border-top: 4px solid var(--blue); }
-    .band {
+    .panel.kpi {
       display: grid;
-      grid-template-columns: minmax(0, .9fr) minmax(400px, 1.1fr);
-      gap: 26px;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
       align-items: center;
-      padding: 28px;
+      min-height: 112px;
+    }
+    .kpi strong {
+      color: var(--ink);
+      font-size: 32px;
+      line-height: 1;
+    }
+    .kpi span {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .flow-step {
+      min-height: 146px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--teal);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+    .flow-step:nth-child(2) { border-top-color: var(--cyan); }
+    .flow-step:nth-child(3) { border-top-color: var(--amber); }
+    .flow-step:nth-child(4) { border-top-color: var(--plum); }
+    .flow-step:nth-child(5) { border-top-color: var(--green); }
+    .flow-step small {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .flow-step strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+    .flow-step span {
+      color: var(--muted);
+      line-height: 1.58;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(360px, .9fr) minmax(0, 1.1fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+    .terminal {
+      min-height: 100%;
+      padding: 20px;
+      border-radius: 8px;
+      color: #e8f2f4;
+      background: #0f151d;
+      border: 1px solid #26323d;
+      font-family: Consolas, "Courier New", monospace;
+      line-height: 1.58;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    .profiles {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .profile {
+      min-height: 178px;
+      padding: 16px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: white;
+      background: #fff;
     }
-    .band img {
-      width: 100%;
+    .profile .tag {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 6px 9px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--teal);
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .profile:nth-child(2) .tag { background: var(--cyan); }
+    .profile:nth-child(3) .tag { background: var(--amber); }
+    .profile:nth-child(4) .tag { background: var(--plum); }
+    .profile:nth-child(5) .tag { background: var(--green); }
+    .profile h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    .profile p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+    }
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .evidence {
+      min-height: 176px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+    .evidence strong {
       display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .evidence p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.62;
+    }
+    .docs-band {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+      gap: 22px;
+      align-items: center;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .docs-band img {
+      display: block;
+      width: 100%;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #eef3f7;
     }
-    .metrics {
+    .link-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 22px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
     }
-    .metric {
-      min-height: 84px;
+    .link-tile {
+      min-height: 76px;
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #f8fafc;
     }
-    .metric strong {
+    .link-tile strong {
       display: block;
-      color: var(--charcoal);
-      font-size: 30px;
-      line-height: 1;
-      letter-spacing: 0;
+      margin-bottom: 6px;
     }
-    .metric span {
-      display: block;
-      margin-top: 8px;
+    .link-tile span {
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.4;
+      line-height: 1.45;
     }
-    code {
-      display: block;
-      margin-top: 18px;
-      padding: 16px;
-      color: #e7eff7;
-      background: #121b26;
-      border-radius: 8px;
-      line-height: 1.58;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .step {
-      min-height: 136px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: white;
-    }
-    .step-number {
-      display: grid;
-      place-items: center;
-      width: 32px;
-      height: 32px;
-      margin-bottom: 14px;
-      border-radius: 8px;
-      color: white;
-      background: var(--blue);
-      font-weight: 800;
-    }
-    .step strong {
-      display: block;
-      margin-bottom: 8px;
-    }
-    .step span {
+    footer {
+      padding: 22px max(24px, calc((100vw - 1180px) / 2));
       color: var(--muted);
-      line-height: 1.55;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      font-size: 14px;
     }
-    .lang-root[data-lang="en"] .zh,
-    .lang-root[data-lang="zh"] .en { display: none; }
-    @media (max-width: 980px) {
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .section-head { align-items: start; flex-direction: column; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .band { grid-template-columns: 1fr; padding: 22px; }
-      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      h1 { font-size: 48px; }
+    @media (max-width: 1080px) {
+      .artifact,
+      .split,
+      .docs-band { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .profiles,
+      .evidence-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      h1 { font-size: 54px; }
     }
-    @media (max-width: 620px) {
-      .topbar { padding: 18px 22px; }
-      .brand {
+    @media (max-width: 720px) {
+      .topbar {
         align-items: flex-start;
-        width: 100%;
+        flex-direction: column;
+        padding: 18px 22px;
       }
-      .brand span:last-child { font-size: 14px; }
+      .brand { width: 100%; }
+      .brand-name { font-size: 14px; }
       .navlinks {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         width: 100%;
       }
-      .navlinks a,
-      .lang button { text-align: center; }
+      .navlinks a { text-align: center; }
       .lang {
         grid-column: 1 / -1;
         width: 100%;
       }
       .lang button { flex: 1; }
-      .grid,
-      .metrics,
-      .timeline { grid-template-columns: 1fr; }
-      .hero { min-height: 78vh; }
-      .hero-copy { padding-top: 232px; }
-      h1 { font-size: 38px; }
+      .hero { min-height: 92vh; }
+      .hero-inner {
+        width: calc(100% - 44px);
+        padding-top: 250px;
+        padding-bottom: 54px;
+      }
+      h1 { font-size: 40px; }
+      h2 { font-size: 28px; }
       .lead { font-size: 18px; }
-      main { padding-bottom: 46px; }
+      .proof-strip,
+      .flow,
+      .profiles,
+      .evidence-grid,
+      .link-grid { grid-template-columns: 1fr; }
+      .artifact-visual img { min-height: 280px; }
+      main { padding: 38px 22px 54px; }
     }
   </style>
 </head>
@@ -327,98 +471,143 @@
     <div class="topbar">
       <a class="brand" href="#top" aria-label="Structured Operations Notice Agent">
         <span class="brand-mark">ON</span>
-        <span>Structured Operations Notice Agent</span>
+        <span class="brand-name">Structured Operations Notice Agent</span>
       </a>
       <div class="navlinks">
-        <a href="#profiles">Profiles</a>
+        <a href="#product">Product</a>
         <a href="#workflow">Workflow</a>
-        <a href="#quality">Quality</a>
+        <a href="#evidence">Evidence</a>
         <span class="lang">
           <button class="active" type="button" data-set-lang="zh">中文</button>
           <button type="button" data-set-lang="en">EN</button>
         </span>
       </div>
     </div>
-    <section id="top" class="hero-copy">
+
+    <section id="top" class="hero-inner">
       <p class="eyebrow">v0.3.0 · local-first · contract-driven</p>
       <h1 class="zh">结构化作业通知工作台</h1>
       <h1 class="en">Structured Operations Notice Workbench</h1>
-      <p class="lead zh">把工单、资源、步骤、履约规则和控制点转换成可审核的 Excel、网页预览、manifest 和 agent context，适用于制造、仓储、维修、现场服务和合规审查。</p>
-      <p class="lead en">Convert work orders, resources, steps, fulfillment rules, and controls into review-ready Excel, preview, manifest, and agent context artifacts for manufacturing, warehouse, maintenance, service, and compliance workflows.</p>
-      <div class="badges">
-        <span class="badge">JSON contract</span>
-        <span class="badge">CSV adapter</span>
-        <span class="badge">5 scenario profiles</span>
-        <span class="badge">human review gate</span>
+      <p class="lead zh">把 CSV 或 JSON work package 转换成可审核的 Excel、网页预览、manifest 和 agent context。公开版面向制造、仓储、维修、现场服务和合规审查，默认本地运行，默认人工放行。</p>
+      <p class="lead en">Convert CSV or JSON work packages into review-ready Excel, browser previews, manifests, and agent context. Built for manufacturing, warehouse, maintenance, service, and compliance workflows with local-first defaults.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="https://github.com/Felix-Zuo/factory-production-notice-agent">GitHub Repo</a>
+        <a class="button" href="https://github.com/Felix-Zuo/factory-production-notice-agent/releases/tag/v0.3.0">v0.3.0 Release</a>
+        <a class="button" href="#product">View Product Surface</a>
+      </div>
+      <div class="proof-strip">
+        <div class="proof-item"><strong>CSV + JSON</strong><span class="zh">表格导入和标准契约共用同一验证链路。</span><span class="en">Tabular imports and JSON contracts share one validation path.</span></div>
+        <div class="proof-item"><strong>5 Profiles</strong><span class="zh">内置五类通用作业场景。</span><span class="en">Five built-in operations scenario families.</span></div>
+        <div class="proof-item"><strong>CI Gate</strong><span class="zh">测试、导入、验证、生成和打包检查自动覆盖。</span><span class="en">Tests, import, validation, generation, and package checks.</span></div>
+        <div class="proof-item"><strong>Safe Local API</strong><span class="zh">演示服务默认只绑定 loopback。</span><span class="en">The demo server binds to loopback by default.</span></div>
       </div>
     </section>
   </header>
 
   <main>
-    <section id="profiles" class="section">
+    <section id="product" class="section">
       <div class="section-head">
-        <h2 class="zh">跨场景 Profile</h2>
-        <h2 class="en">Scenario Profiles</h2>
-        <p class="zh">公开版本不绑定单一品类，profile 只提供场景默认语义，核心契约保持通用。</p>
-        <p class="en">The public build is not tied to one product category. Profiles provide scenario semantics while the core contract stays generic.</p>
+        <h2 class="zh">真实产品输出，而不是静态概念图</h2>
+        <h2 class="en">Real Product Output, Not A Static Concept</h2>
+        <p class="zh">展示页首要展示真实生成物：通知预览、合同化接口、发布 manifest 和下游 agent context。</p>
+        <p class="en">The showcase leads with generated artifacts: notice preview, contract surface, release manifest, and downstream agent context.</p>
       </div>
-      <div class="grid">
-        <article class="card accent-teal">
-          <h3>Warehouse Fulfillment</h3>
-          <p class="zh">拣配、标签、容器、批次和出库检查。</p>
-          <p class="en">Picking, labels, containers, batches, and dispatch checks.</p>
-        </article>
-        <article class="card accent-blue">
-          <h3>Manufacturing Release</h3>
-          <p class="zh">兼容生产通知、资源、工艺步骤和质量门禁。</p>
-          <p class="en">Compatible with production notices, resources, routing steps, and quality gates.</p>
-        </article>
-        <article class="card accent-amber">
-          <h3>Maintenance Service</h3>
-          <p class="zh">设备、备件、工具、作业窗口和关闭证据。</p>
-          <p class="en">Assets, spare parts, tools, service windows, and closeout evidence.</p>
-        </article>
-        <article class="card accent-plum">
-          <h3>Compliance Review</h3>
-          <p class="zh">证据清单、审批轨迹、留存规则和审查结论。</p>
-          <p class="en">Evidence lists, approval trails, retention rules, and review outcomes.</p>
-        </article>
+      <div class="artifact">
+        <div class="artifact-visual">
+          <img src="assets/screenshots/notice-output.png" alt="Generated operations notice preview">
+        </div>
+        <div class="stack">
+          <div class="panel kpi"><strong>4</strong><span class="zh">每次生成固定输出四类产物：xlsx、html、manifest、agent context。</span><span class="en">Each run emits four stable artifacts: xlsx, html, manifest, and agent context.</span></div>
+          <div class="panel kpi"><strong>0</strong><span class="zh">默认不依赖外部服务；公开样例全是合成数据。</span><span class="en">No external service dependency by default; public samples are synthetic.</span></div>
+          <div class="panel kpi"><strong>1 MB</strong><span class="zh">本地 API 有请求体限制，并默认拒绝非 loopback 绑定。</span><span class="en">The local API caps request size and rejects non-loopback binding by default.</span></div>
+          <div class="panel">
+            <p class="body-copy zh">界面语言刻意偏“操作系统工具”：少装饰，强信息密度，突出可运行命令、产物边界和安全默认值。</p>
+            <p class="body-copy en">The interface deliberately feels like an operations tool: restrained styling, high information density, runnable commands, artifact boundaries, and safety defaults.</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="workflow" class="section band">
+    <section id="workflow" class="section">
+      <div class="section-head">
+        <h2 class="zh">从工作包到发布包</h2>
+        <h2 class="en">From Work Package To Release Packet</h2>
+        <p class="zh">流程区参考优秀自动化平台的表达方式：先讲路径，再讲扩展点，最后讲安全门禁。</p>
+        <p class="en">The workflow section follows strong automation pages: path first, extension points next, safety gates last.</p>
+      </div>
+      <div class="flow">
+        <div class="flow-step"><small>01</small><strong>Profile</strong><span class="zh">选择制造、仓储、维修、现场服务或审查语义。</span><span class="en">Select manufacturing, warehouse, maintenance, service, or review semantics.</span></div>
+        <div class="flow-step"><small>02</small><strong>Import</strong><span class="zh">CSV 行按 notice_id 聚合为标准 JSON。</span><span class="en">CSV rows are grouped by notice_id into standard JSON.</span></div>
+        <div class="flow-step"><small>03</small><strong>Validate</strong><span class="zh">检查必填字段、数字、布尔值和嵌套结构。</span><span class="en">Validate required fields, numbers, booleans, and nested structure.</span></div>
+        <div class="flow-step"><small>04</small><strong>Generate</strong><span class="zh">输出 Excel、HTML、manifest 和 agent context。</span><span class="en">Emit Excel, HTML, manifest, and agent context.</span></div>
+        <div class="flow-step"><small>05</small><strong>Review</strong><span class="zh">真实作业放行保留给人工审批。</span><span class="en">Real operational release stays behind human approval.</span></div>
+      </div>
+    </section>
+
+    <section class="section split">
       <div>
-        <h2 class="zh">从导入到发布包</h2>
-        <h2 class="en">From Import To Release Packet</h2>
-        <p class="body-copy zh">CSV 适配器把表格型 work package 按 `notice_id` 聚合为标准 JSON。生成器随后输出 Excel、HTML、manifest 和给下游 agent 使用的上下文。</p>
-        <p class="body-copy en">The CSV adapter groups tabular work-package rows by `notice_id` into standard JSON. The generator then emits Excel, HTML, manifest, and downstream agent context.</p>
-        <div class="metrics">
-          <div class="metric"><strong>5</strong><span class="zh">内置场景族</span><span class="en">built-in profile families</span></div>
-          <div class="metric"><strong>4</strong><span class="zh">交付产物类型</span><span class="en">artifact types</span></div>
-          <div class="metric"><strong>0</strong><span class="zh">默认外部服务依赖</span><span class="en">external services by default</span></div>
+        <h2 class="zh">开发者入口清晰</h2>
+        <h2 class="en">Clear Developer Entry</h2>
+        <p class="body-copy zh">顶尖开源项目的主页会让访问者立刻知道如何运行、如何验证、如何判断项目是否可信。这里把最短路径直接放在展示页。</p>
+        <p class="body-copy en">Strong open-source product pages show how to run, verify, and trust the project quickly. This page puts the shortest path in view.</p>
+      </div>
+      <div class="terminal">operations-notice profiles
+operations-notice import-csv --input sample_data/csv/work_package_notices.csv --output-dir output/imported
+operations-notice validate --input output/imported/ON-2026-CSV-001.json
+operations-notice generate --input output/imported/ON-2026-CSV-001.json --output output</div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="zh">不绑定单一品类的场景矩阵</h2>
+        <h2 class="en">Scenario Matrix Beyond One Product Category</h2>
+        <p class="zh">Profile 只提供场景默认语义，核心模型仍然使用 subject、resources、steps、fulfillment 和 controls。</p>
+        <p class="en">Profiles provide scenario semantics while the core model stays on subject, resources, steps, fulfillment, and controls.</p>
+      </div>
+      <div class="profiles">
+        <article class="profile"><span class="tag">Warehouse</span><h3>Warehouse Fulfillment</h3><p class="zh">拣配、标签、容器、批次和出库检查。</p><p class="en">Picking, labels, containers, batches, and dispatch checks.</p></article>
+        <article class="profile"><span class="tag">Factory</span><h3>Manufacturing Release</h3><p class="zh">资源、步骤、履约和质量门禁。</p><p class="en">Resources, steps, fulfillment, and quality gates.</p></article>
+        <article class="profile"><span class="tag">Service</span><h3>Maintenance Service</h3><p class="zh">设备、工具、备件和关闭证据。</p><p class="en">Assets, tools, spare parts, and closeout evidence.</p></article>
+        <article class="profile"><span class="tag">Dispatch</span><h3>Field Dispatch</h3><p class="zh">任务包、人员交接、路由和完成证据。</p><p class="en">Task packets, crew handoff, routing, and completion evidence.</p></article>
+        <article class="profile"><span class="tag">Review</span><h3>Compliance Review</h3><p class="zh">证据清单、审批轨迹和留存规则。</p><p class="en">Evidence lists, approval trails, and retention rules.</p></article>
+      </div>
+    </section>
+
+    <section id="evidence" class="section">
+      <div class="section-head">
+        <h2 class="zh">公开仓库成熟度证据</h2>
+        <h2 class="en">Public Repository Maturity Evidence</h2>
+        <p class="zh">展示页不只讲能力，也直接交代项目的质量边界、发布记录和维护材料。</p>
+        <p class="en">The page documents not only capability, but quality boundaries, releases, and maintenance materials.</p>
+      </div>
+      <div class="evidence-grid">
+        <article class="evidence"><strong>Validation Surface</strong><p class="zh">CLI、CSV 适配器、模型解析和 HTTP API 共用验证语义。</p><p class="en">CLI, CSV adapter, model parser, and HTTP API share validation semantics.</p></article>
+        <article class="evidence"><strong>Spreadsheet Safety</strong><p class="zh">Excel 写入前处理公式型文本和控制字符，降低公开 demo 风险。</p><p class="en">Formula-like text and control characters are handled before Excel export.</p></article>
+        <article class="evidence"><strong>Release Hygiene</strong><p class="zh">发布记录、changelog、roadmap、issue template 和 support 文档保持可追溯。</p><p class="en">Releases, changelog, roadmap, issue templates, and support docs are traceable.</p></article>
+        <article class="evidence"><strong>CI Package Gate</strong><p class="zh">CI 覆盖测试、样例验证、CSV 导入、生成和发布包内容检查。</p><p class="en">CI covers tests, sample validation, CSV import, generation, and package checks.</p></article>
+      </div>
+    </section>
+
+    <section class="section docs-band">
+      <div>
+        <h2 class="zh">自动化契约可读可运行</h2>
+        <h2 class="en">Automation Contract Is Readable And Runnable</h2>
+        <p class="body-copy zh">顶尖项目不会只放一张漂亮图，还会把接口、边界和验证入口放到访问者可以立刻理解的位置。</p>
+        <p class="body-copy en">Strong projects do not stop at a beautiful visual. They put interfaces, boundaries, and verification paths where visitors can understand them quickly.</p>
+        <div class="link-grid">
+          <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/README.md"><strong>README</strong><span>Fresh checkout workflow</span></a>
+          <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/docs/QUALITY.md"><strong>Quality</strong><span>Safety and validation notes</span></a>
+          <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/ROADMAP.md"><strong>Roadmap</strong><span>Public product direction</span></a>
+          <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/agent_interface.json"><strong>Agent Contract</strong><span>Machine-readable capabilities</span></a>
         </div>
-        <code>operations-notice import-csv --input sample_data/csv/work_package_notices.csv --output-dir output/imported
-operations-notice generate --input output/imported/ON-2026-CSV-001.json --output output</code>
       </div>
       <img src="assets/screenshots/agent-contract.png" alt="Automation contract preview">
     </section>
-
-    <section id="quality" class="section">
-      <div class="section-head">
-        <h2 class="zh">成熟度信号</h2>
-        <h2 class="en">Maturity Signals</h2>
-        <p class="zh">仓库把安全默认值、验证门禁、CI、发布记录和贡献材料作为产品的一部分维护。</p>
-        <p class="en">The repository treats safety defaults, validation gates, CI, release notes, and contribution materials as part of the product.</p>
-      </div>
-      <div class="timeline">
-        <div class="step"><span class="step-number">1</span><strong>Preflight</strong><span class="zh">验证必填字段、数值、布尔值和导入契约。</span><span class="en">Validates required fields, numbers, booleans, and import contracts.</span></div>
-        <div class="step"><span class="step-number">2</span><strong>Spreadsheet Safety</strong><span class="zh">写入 Excel 前转义公式型文本和控制字符。</span><span class="en">Escapes formula-like text and control characters before writing Excel.</span></div>
-        <div class="step"><span class="step-number">3</span><strong>Local Boundary</strong><span class="zh">本地 API 默认只绑定 loopback，避免误暴露。</span><span class="en">The local API binds to loopback by default to avoid accidental exposure.</span></div>
-        <div class="step"><span class="step-number">4</span><strong>CI Gate</strong><span class="zh">自动覆盖测试、样例验证、导入、生成和包内容检查。</span><span class="en">CI covers tests, sample validation, import, generation, and package checks.</span></div>
-        <div class="step"><span class="step-number">5</span><strong>Human Approval</strong><span class="zh">工具准备发布包，真实作业放行仍由人工确认。</span><span class="en">The tool prepares release packets while real operational release stays human-approved.</span></div>
-      </div>
-    </section>
   </main>
+
+  <footer>
+    Structured Operations Notice Agent · local-first public showcase · synthetic data only
+  </footer>
 
   <script>
     const root = document.body;
