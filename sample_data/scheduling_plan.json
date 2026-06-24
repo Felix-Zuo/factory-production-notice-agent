@@ -1,0 +1,68 @@
+{
+  "schedule_id": "SCH-2026-W26-A",
+  "template_id": "production-release",
+  "planner": "Planning Control",
+  "release_date": "2026-06-24",
+  "items": [
+    {
+      "sequence": 10,
+      "notice_id": "PN-2026-SCH-001",
+      "work_order": "WO-MFG-260625-A01",
+      "requester": "Planning Control",
+      "priority": "high",
+      "quantity": 96,
+      "quantity_unit": "sets",
+      "due_date": "2026-06-27",
+      "subject": {
+        "subject_id": "DRV-CTRL-220",
+        "name": "Drive Control Cabinet",
+        "category": "electrical assembly",
+        "revision": "R3"
+      },
+      "line": "Assembly Line A",
+      "shift": "Day",
+      "slot_start": "2026-06-25 08:00",
+      "slot_end": "2026-06-25 14:00",
+      "capacity_status": "confirmed",
+      "custom_fields": {
+        "release_bucket": "W26-A",
+        "serial_range": "A260625-001..096"
+      }
+    },
+    {
+      "sequence": 20,
+      "notice_id": "PN-2026-SCH-002",
+      "work_order": "WO-MFG-260625-B01",
+      "requester": "Planning Control",
+      "priority": "normal",
+      "quantity": 72,
+      "quantity_unit": "sets",
+      "due_date": "2026-06-28",
+      "subject": {
+        "subject_id": "SEN-HUB-110",
+        "name": "Sensor Hub Assembly",
+        "category": "electronic assembly",
+        "revision": "R2"
+      },
+      "line": "Assembly Line B",
+      "shift": "Swing",
+      "slot_start": "2026-06-25 14:30",
+      "slot_end": "2026-06-25 19:30",
+      "capacity_status": "confirmed",
+      "resources": [
+        {"resource_id": "RM-HUB-110", "name": "Hub Enclosure", "quantity_per": 1, "unit": "pcs", "source": "Line-side Supermarket"},
+        {"resource_id": "RM-PCBA-110", "name": "Sensor PCBA", "quantity_per": 1, "unit": "pcs", "source": "Electronics Store"},
+        {"resource_id": "LBL-TRACE-030", "name": "Traceability Label", "quantity_per": 1, "unit": "pcs", "source": "Print Station"}
+      ],
+      "steps": [
+        {"step": "OP10", "owner": "Assembly Line B", "instruction": "Assemble enclosure and PCBA", "target_time_min": 12},
+        {"step": "OP20", "owner": "Test Bench", "instruction": "Run connectivity and calibration check", "target_time_min": 10},
+        {"step": "OP30", "owner": "Packaging", "instruction": "Pack and release to staging", "target_time_min": 5}
+      ],
+      "custom_fields": {
+        "release_bucket": "W26-B",
+        "serial_range": "B260625-001..072"
+      }
+    }
+  ]
+}

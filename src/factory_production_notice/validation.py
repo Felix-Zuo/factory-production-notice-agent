@@ -42,6 +42,7 @@ def validate_notice_payload(payload: dict[str, Any]) -> NoticeValidationResult:
             "quantity_unit": notice.quantity_unit,
             "resource_count": len(notice.materials),
             "step_count": len(notice.routing),
+            "custom_field_count": len(notice.custom_fields),
         },
     )
 

@@ -1,0 +1,32 @@
+{
+  "templates": [
+    {
+      "id": "custom-fixture-release",
+      "label": "Custom Fixture Release",
+      "profile_id": "manufacturing-release",
+      "description": "Example custom template with user-owned fields.",
+      "payload": {
+        "notice_id": "PN-2026-CUSTOM-001",
+        "notice_type": "Production Notice",
+        "domain": "manufacturing-release",
+        "work_order": "WO-CUSTOM-001",
+        "requester": "Fixture Owner",
+        "priority": "normal",
+        "quantity": 12,
+        "quantity_unit": "fixtures",
+        "due_date": "2026-06-30",
+        "issuer": "Production Control",
+        "subject": {"subject_id": "FIX-CUSTOM-001", "name": "Custom Fixture Set", "category": "tooling", "revision": "R1"},
+        "resources": [{"resource_id": "DOC-FIXTURE", "name": "Fixture Setup Sheet", "quantity_per": 1, "unit": "set", "source": "Engineering Share"}],
+        "steps": [{"step": "F10", "owner": "Fixture Owner", "instruction": "Inspect fixture and record release condition", "target_time_min": 10}],
+        "fulfillment": {"method": "Controlled fixture handoff", "units_per_container": 1, "containers_per_batch": 12, "label_rule": "Fixture ID and owner"},
+        "controls": {"approval_required": true, "review_rule": "Owner signoff before line use", "critical_controls": ["fixture condition", "owner signoff"]},
+        "custom_fields": [
+          {"key": "fixture_owner", "label": "Fixture Owner", "value": "Owner Name", "group": "Custom Template"},
+          {"key": "storage_location", "label": "Storage Location", "value": "Tooling Rack", "group": "Custom Template"}
+        ],
+        "notes": ["This file demonstrates how a user-owned template can add fields without changing code."]
+      }
+    }
+  ]
+}

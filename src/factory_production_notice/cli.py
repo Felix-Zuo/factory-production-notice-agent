@@ -10,7 +10,9 @@ from .generator import generate_notice, slug
 from .io_utils import load_sample_request, read_json, write_json
 from .models import ProductionNotice
 from .profiles import profile_catalog
+from .schedule_adapter import SchedulePlanError, generate_from_schedule
 from .server import run_server
+from .templates import NoticeTemplateError, build_notice_from_template, template_catalog
 from .validation import validate_notice_payload
 
 
@@ -40,6 +42,24 @@ def main(argv: list[str] | None = None) -> None:
 
     profiles = sub.add_parser("profiles", help="List built-in scenario profiles.")
     profiles.set_defaults(func=run_profiles)
+
+    templates = sub.add_parser("templates", help="List built-in notice templates.")
+    templates.add_argument("--template-file", help="Optional custom template file to merge into the catalog.")
+    templates.set_defaults(func=run_templates)
+
+    new_from_template = sub.add_parser("new-from-template", help="Create an editable notice request from a template.")
+    new_from_template.add_argument("--template", required=True)
+    new_from_template.add_argument("--output", required=True)
+    new_from_template.add_argument("--template-file", help="Optional custom template file.")
+    new_from_template.add_argument("--set", action="append", default=[], help="Override a field with dotted.path=value syntax.")
+    new_from_template.add_argument("--custom-field", action="append", default=[], help="Add a custom field with key=value syntax.")
+    new_from_template.set_defaults(func=run_new_from_template)
+
+    schedule = sub.add_parser("schedule-generate", help="Generate notice requests and artifacts from a schedule plan.")
+    schedule.add_argument("--input", required=True)
+    schedule.add_argument("--output", required=True)
+    schedule.add_argument("--template-file", help="Optional custom template file.")
+    schedule.set_defaults(func=run_schedule_generate)
 
     context = sub.add_parser("analysis-context", help="Export structured context for downstream agents.")
     context.add_argument("--input", required=True)
@@ -101,6 +121,36 @@ def run_import_csv(args: argparse.Namespace) -> None:
 
 def run_profiles(args: argparse.Namespace) -> None:
     print(json.dumps(profile_catalog(), ensure_ascii=False, indent=2))
+
+
+def run_templates(args: argparse.Namespace) -> None:
+    try:
+        catalog = template_catalog(args.template_file)
+    except NoticeTemplateError as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(catalog, ensure_ascii=False, indent=2))
+
+
+def run_new_from_template(args: argparse.Namespace) -> None:
+    try:
+        payload = build_notice_from_template(
+            args.template,
+            template_file=args.template_file,
+            overrides=args.set,
+            custom_fields=args.custom_field,
+        )
+    except NoticeTemplateError as exc:
+        raise SystemExit(str(exc)) from exc
+    path = write_json(args.output, payload)
+    print(path)
+
+
+def run_schedule_generate(args: argparse.Namespace) -> None:
+    try:
+        manifest = generate_from_schedule(args.input, args.output, template_file=args.template_file)
+    except (SchedulePlanError, NoticeTemplateError) as exc:
+        raise SystemExit(str(exc)) from exc
+    print(json.dumps(manifest, ensure_ascii=False, indent=2))
 
 
 def run_analysis_context(args: argparse.Namespace) -> None:

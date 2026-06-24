@@ -1,0 +1,180 @@
+{
+  "templates": [
+    {
+      "id": "production-release",
+      "label": "Production Release Notice",
+      "profile_id": "manufacturing-release",
+      "description": "Production notice preset with schedule, routing, resource, packaging, control, and custom field defaults.",
+      "payload": {
+        "notice_id": "PN-2026-TPL-001",
+        "notice_type": "Production Notice",
+        "domain": "manufacturing-release",
+        "work_order": "WO-MFG-TEMPLATE",
+        "requester": "Planning Control",
+        "priority": "normal",
+        "quantity": 120,
+        "quantity_unit": "sets",
+        "due_date": "2026-06-30",
+        "issuer": "Production Control",
+        "subject": {
+          "subject_id": "FG-STD-ASSEMBLY",
+          "name": "Standard Assembly",
+          "category": "finished goods",
+          "revision": "R1"
+        },
+        "resources": [
+          {"resource_id": "RM-HOUSING-001", "name": "Housing Kit", "quantity_per": 1, "unit": "set", "source": "Line-side supermarket"},
+          {"resource_id": "RM-CONTROL-002", "name": "Control Module", "quantity_per": 1, "unit": "pcs", "source": "Electronics Store"},
+          {"resource_id": "PKG-LABEL-010", "name": "Traceability Label", "quantity_per": 1, "unit": "pcs", "source": "Print Station"}
+        ],
+        "steps": [
+          {"step": "OP10", "owner": "Assembly Line A", "instruction": "Assemble housing and control module", "target_time_min": 18},
+          {"step": "OP20", "owner": "Test Bench", "instruction": "Run functional test and record result", "target_time_min": 12},
+          {"step": "OP30", "owner": "Packaging", "instruction": "Pack with traceability label and release note", "target_time_min": 6}
+        ],
+        "fulfillment": {
+          "method": "Line-side release plus finished-goods staging",
+          "units_per_container": 12,
+          "containers_per_batch": 10,
+          "label_rule": "Work order, revision, schedule slot, and serial range on each container"
+        },
+        "controls": {
+          "approval_required": true,
+          "review_rule": "First-off confirmation and final sample review before release",
+          "critical_controls": ["revision match", "functional test", "label traceability", "schedule slot"]
+        },
+        "custom_fields": [
+          {"key": "schedule_id", "label": "Schedule ID", "value": "SCH-TEMPLATE", "group": "Schedule"},
+          {"key": "line", "label": "Production Line", "value": "Assembly Line A", "group": "Schedule"},
+          {"key": "shift", "label": "Shift", "value": "Day", "group": "Schedule"},
+          {"key": "slot_start", "label": "Slot Start", "value": "2026-06-30 08:00", "group": "Schedule"},
+          {"key": "slot_end", "label": "Slot End", "value": "2026-06-30 12:00", "group": "Schedule"},
+          {"key": "planner", "label": "Planner", "value": "Planning Control", "group": "Schedule"},
+          {"key": "capacity_status", "label": "Capacity Status", "value": "confirmed", "group": "Schedule"}
+        ],
+        "notes": [
+          "Verify schedule slot and revision before material release.",
+          "Use masked or synthetic identifiers in public examples."
+        ]
+      }
+    },
+    {
+      "id": "warehouse-fulfillment",
+      "label": "Warehouse Fulfillment Notice",
+      "profile_id": "warehouse-fulfillment",
+      "description": "Warehouse notice preset for picking, labels, dispatch containers, and outbound review.",
+      "payload": {
+        "notice_id": "ON-2026-TPL-WH",
+        "notice_type": "Operations Notice",
+        "domain": "warehouse-fulfillment",
+        "work_order": "WO-WH-TEMPLATE",
+        "requester": "Warehouse Control",
+        "priority": "normal",
+        "quantity": 240,
+        "quantity_unit": "kits",
+        "due_date": "2026-06-30",
+        "issuer": "Operations Control",
+        "subject": {"subject_id": "KIT-STD-240", "name": "Standard Dispatch Kit", "category": "warehouse release", "revision": "R1"},
+        "resources": [
+          {"resource_id": "DOC-PICK-001", "name": "Pick List", "quantity_per": 1, "unit": "set", "source": "WMS Export"},
+          {"resource_id": "LBL-OUT-010", "name": "Outbound Label", "quantity_per": 1, "unit": "set", "source": "Print Station"}
+        ],
+        "steps": [
+          {"step": "S10", "owner": "Warehouse", "instruction": "Pick and stage kit components", "target_time_min": 12},
+          {"step": "S20", "owner": "Control Desk", "instruction": "Sample scan and verify dispatch manifest", "target_time_min": 5}
+        ],
+        "fulfillment": {"method": "Tote staging lane", "units_per_container": 12, "containers_per_batch": 20, "label_rule": "Lane, manifest ID, and site code"},
+        "controls": {"approval_required": true, "review_rule": "Scan one kit per lane", "critical_controls": ["manifest ID", "kit count", "label match"]},
+        "custom_fields": [{"key": "dispatch_lane", "label": "Dispatch Lane", "value": "L-01", "group": "Warehouse"}],
+        "notes": ["Release after manifest sample signoff."]
+      }
+    },
+    {
+      "id": "maintenance-service",
+      "label": "Maintenance Service Notice",
+      "profile_id": "maintenance-service",
+      "description": "Maintenance notice preset for assets, tools, parts, isolation, and closeout evidence.",
+      "payload": {
+        "notice_id": "ON-2026-TPL-SVC",
+        "notice_type": "Maintenance Notice",
+        "domain": "maintenance-service",
+        "work_order": "WO-SVC-TEMPLATE",
+        "requester": "Facilities Service Desk",
+        "priority": "high",
+        "quantity": 1,
+        "quantity_unit": "asset",
+        "due_date": "2026-06-30",
+        "issuer": "Maintenance Control",
+        "subject": {"subject_id": "ASSET-TEMPLATE", "name": "Service Asset", "category": "utility asset", "revision": "R1"},
+        "resources": [
+          {"resource_id": "TOOL-LOCKOUT", "name": "Lockout Kit", "quantity_per": 1, "unit": "set", "source": "Tool Crib"},
+          {"resource_id": "DOC-CLOSEOUT", "name": "Closeout Checklist", "quantity_per": 1, "unit": "set", "source": "Document Control"}
+        ],
+        "steps": [
+          {"step": "S10", "owner": "Maintenance Lead", "instruction": "Confirm asset isolation", "target_time_min": 12},
+          {"step": "S20", "owner": "Technician", "instruction": "Complete service and record condition", "target_time_min": 35}
+        ],
+        "fulfillment": {"method": "Service kit plus closeout packet", "units_per_container": 1, "containers_per_batch": 1, "label_rule": "Asset ID and service window"},
+        "controls": {"approval_required": true, "review_rule": "Supervisor review before return to service", "critical_controls": ["lockout", "service record", "closeout evidence"]},
+        "custom_fields": [{"key": "service_window", "label": "Service Window", "value": "planned", "group": "Maintenance"}],
+        "notes": ["Return to service only after closeout evidence is attached."]
+      }
+    },
+    {
+      "id": "field-dispatch",
+      "label": "Field Dispatch Notice",
+      "profile_id": "field-dispatch",
+      "description": "Dispatch notice preset for route, crew handoff, parts check, and completion evidence.",
+      "payload": {
+        "notice_id": "ON-2026-TPL-FD",
+        "notice_type": "Dispatch Notice",
+        "domain": "field-dispatch",
+        "work_order": "WO-FD-TEMPLATE",
+        "requester": "Field Control",
+        "priority": "normal",
+        "quantity": 1,
+        "quantity_unit": "task",
+        "due_date": "2026-06-30",
+        "issuer": "Dispatch Office",
+        "subject": {"subject_id": "TASK-TEMPLATE", "name": "Field Task Packet", "category": "field dispatch", "revision": "R1"},
+        "resources": [{"resource_id": "KIT-FIELD", "name": "Field Parts Kit", "quantity_per": 1, "unit": "set", "source": "Dispatch Store"}],
+        "steps": [
+          {"step": "D10", "owner": "Dispatcher", "instruction": "Confirm route and crew", "target_time_min": 6},
+          {"step": "D20", "owner": "Field Crew", "instruction": "Complete task and upload completion evidence", "target_time_min": 45}
+        ],
+        "fulfillment": {"method": "Crew handoff packet", "units_per_container": 1, "containers_per_batch": 1, "label_rule": "Route and task ID"},
+        "controls": {"approval_required": true, "review_rule": "Parts check before route release", "critical_controls": ["route", "parts", "completion evidence"]},
+        "custom_fields": [{"key": "route", "label": "Route", "value": "R-01", "group": "Dispatch"}],
+        "notes": ["Dispatch only after route confirmation."]
+      }
+    },
+    {
+      "id": "compliance-review",
+      "label": "Compliance Review Notice",
+      "profile_id": "compliance-review",
+      "description": "Review notice preset for evidence index, signoff, retention, and audit trail.",
+      "payload": {
+        "notice_id": "ON-2026-TPL-CR",
+        "notice_type": "Review Notice",
+        "domain": "compliance-review",
+        "work_order": "WO-CR-TEMPLATE",
+        "requester": "Quality Systems",
+        "priority": "normal",
+        "quantity": 1,
+        "quantity_unit": "package",
+        "due_date": "2026-06-30",
+        "issuer": "Compliance Office",
+        "subject": {"subject_id": "EVIDENCE-TEMPLATE", "name": "Evidence Pack", "category": "regulated review", "revision": "R1"},
+        "resources": [{"resource_id": "DOC-INDEX", "name": "Evidence Index", "quantity_per": 1, "unit": "file", "source": "Quality Share"}],
+        "steps": [
+          {"step": "R10", "owner": "Reviewer", "instruction": "Verify evidence index completeness", "target_time_min": 20},
+          {"step": "R20", "owner": "Approver", "instruction": "Complete approval checklist and archive decision", "target_time_min": 15}
+        ],
+        "fulfillment": {"method": "Review packet plus signoff archive", "units_per_container": 1, "containers_per_batch": 1, "label_rule": "Review ID and retention class"},
+        "controls": {"approval_required": true, "review_rule": "Reviewer signoff and retention confirmation", "critical_controls": ["evidence completeness", "signoff", "retention class"]},
+        "custom_fields": [{"key": "retention_class", "label": "Retention Class", "value": "controlled", "group": "Compliance"}],
+        "notes": ["Archive only after reviewer signoff."]
+      }
+    }
+  ]
+}

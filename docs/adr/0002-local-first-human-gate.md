@@ -13,7 +13,7 @@ integration.
 ## Decision
 
 Keep this project local-first and artifact-generating. The generator outputs a
-workbook, preview, manifest, and agent context, then stops at a human review
+workbook, preview, manifest, and workflow context, then stops at a human review
 gate.
 
 ## Consequences

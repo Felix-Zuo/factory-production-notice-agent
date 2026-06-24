@@ -10,7 +10,9 @@ from factory_production_notice.generator import generate_notice
 from factory_production_notice.io_utils import read_json
 from factory_production_notice.models import NoticeValidationError, ProductionNotice
 from factory_production_notice.profiles import profile_catalog
+from factory_production_notice.schedule_adapter import generate_from_schedule
 from factory_production_notice.server import is_loopback_host
+from factory_production_notice.templates import build_notice_from_template, template_catalog
 from factory_production_notice.validation import validate_notice_payload
 from scripts.package_project import should_skip
 
@@ -43,6 +45,8 @@ def test_agent_interface_shape() -> None:
     assert "validate_notice" in capability_names
     assert "import_csv_work_packages" in capability_names
     assert "list_scenario_profiles" in capability_names
+    assert "list_notice_templates" in capability_names
+    assert "generate_from_schedule" in capability_names
     assert spec["input_contract"]["sample_path"].endswith("demo_notice_request.json")
 
 
@@ -86,6 +90,61 @@ def test_csv_adapter_rejects_invalid_boolean(tmp_path: Path) -> None:
         assert "approval_required must be true or false" in str(exc)
     else:
         raise AssertionError("Expected CsvImportError")
+
+
+def test_template_catalog_and_request_generation() -> None:
+    catalog = template_catalog()
+    template_ids = {item["id"] for item in catalog["templates"]}
+
+    assert "production-release" in template_ids
+    payload = build_notice_from_template(
+        "production-release",
+        overrides=["notice_id=PN-TEMPLATE-TEST", "quantity=24", "subject.name=Template Test Assembly"],
+        custom_fields=["release_owner=Planning Control"],
+    )
+
+    assert payload["notice_id"] == "PN-TEMPLATE-TEST"
+    assert payload["quantity"] == 24
+    assert payload["subject"]["name"] == "Template Test Assembly"
+    assert any(item["key"] == "release_owner" for item in payload["custom_fields"])
+
+
+def test_custom_template_file_can_extend_catalog() -> None:
+    catalog = template_catalog("sample_data/custom_templates/custom_fixture_template.json")
+    template_ids = {item["id"] for item in catalog["templates"]}
+
+    assert "custom-fixture-release" in template_ids
+    payload = build_notice_from_template(
+        "custom-fixture-release",
+        template_file="sample_data/custom_templates/custom_fixture_template.json",
+    )
+    assert payload["subject"]["subject_id"] == "FIX-CUSTOM-001"
+
+
+def test_production_notice_custom_fields_render_in_outputs(tmp_path: Path) -> None:
+    payload = read_json("sample_data/production_notice_request.json")
+    result = generate_notice(payload, tmp_path)
+    context = read_json(result.agent_context_path)
+    html = result.html_path.read_text(encoding="utf-8")
+
+    assert context["custom_field_values"]["schedule_id"] == "SCH-2026-W26-A"
+    assert "Template and Schedule Fields" in html
+    assert "Assembly Line A" in html
+
+
+def test_schedule_generate_creates_requests_and_artifacts(tmp_path: Path) -> None:
+    manifest = generate_from_schedule("sample_data/scheduling_plan.json", tmp_path)
+
+    assert manifest["schedule_id"] == "SCH-2026-W26-A"
+    assert manifest["notice_count"] == 2
+    for entry in manifest["notices"]:
+        request_path = tmp_path / entry["request"]
+        html_path = tmp_path / entry["artifacts"]["html"]
+        assert request_path.exists()
+        assert html_path.exists()
+    first_request = read_json(tmp_path / manifest["notices"][0]["request"])
+    assert first_request["custom_fields"]
+    assert any(field["key"] == "slot_start" for field in first_request["custom_fields"])
 
 
 def test_legacy_manufacturing_payload_still_works(tmp_path: Path) -> None:

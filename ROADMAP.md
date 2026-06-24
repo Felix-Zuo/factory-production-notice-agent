@@ -3,7 +3,7 @@
 The roadmap is intentionally public-demo friendly. Items describe reusable
 product direction, not private customer commitments.
 
-## Current Release: 0.3.0
+## Current Release: 0.4.0
 
 - Keep the generator local-first and deterministic.
 - Preserve compatibility with manufacturing production-notice payloads.
@@ -16,13 +16,18 @@ product direction, not private customer commitments.
 - Provide built-in scenario profiles for common operations workflows.
 - Convert CSV work-package rows into validated JSON notice requests.
 - Keep the showcase page aligned with the current product surface.
+- Provide built-in notice templates and user-owned template loading.
+- Support custom fields in requests, generated previews, workbooks, and context.
+- Convert schedule plans into production notice requests and generated release
+  packets.
 
-## Next: 0.4.x
+## Next: 0.5.x
 
 - Add richer review flags in `agent_context.json`, including missing owner,
   missing control gate, and unusually high quantity checks.
 - Add optional ERP/MES-style and ticket export adapters as examples.
 - Add static generated examples for each built-in scenario profile.
+- Add optional template validation reports for user-owned template files.
 
 ## Later
 

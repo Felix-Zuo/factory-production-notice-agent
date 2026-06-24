@@ -4,6 +4,29 @@ This changelog records the public demo evolution. Pre-public entries are
 reconstructed from sanitized implementation milestones so the repository tells a
 complete product story without exposing private operational data.
 
+## 0.4.0 - 2026-06-24
+
+### Added
+
+- Built-in notice templates with preset production, warehouse, maintenance,
+  field dispatch, and compliance fields.
+- `operations-notice templates` and `operations-notice new-from-template`
+  commands for creating editable notice requests from built-in or custom
+  templates.
+- `custom_fields` contract support, including Excel, HTML, validation summary,
+  and workflow context output.
+- Schedule-linked generation through `operations-notice schedule-generate`,
+  including request JSON output, generated artifacts, and a schedule manifest.
+- Production-style masked notice sample and schedule plan sample.
+- Custom template example for user-owned fields.
+
+### Changed
+
+- CI now validates templates, production-style samples, custom fields, and
+  schedule-linked generation.
+- Showcase page now emphasizes landed production-notice usage and scheduling
+  linkage while keeping the product generic.
+
 ## 0.3.0 - 2026-06-23
 
 ### Added
@@ -86,7 +109,7 @@ complete product story without exposing private operational data.
 ### Added
 
 - First public sanitized demo of the notice generator.
-- CLI generation flow for workbook, HTML preview, manifest, and agent context.
+- CLI generation flow for workbook, HTML preview, manifest, and workflow context.
 - Local HTTP demo endpoint for agent integration.
 - Synthetic sample payload and static showcase page.
 

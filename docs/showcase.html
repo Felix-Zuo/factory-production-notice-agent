@@ -474,9 +474,9 @@
         <span class="brand-name">Structured Operations Notice Agent</span>
       </a>
       <div class="navlinks">
-        <a href="#product">Product</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#evidence">Evidence</a>
+        <a href="#product">Notice</a>
+        <a href="#workflow">Schedule</a>
+        <a href="#evidence">Quality</a>
         <span class="lang">
           <button class="active" type="button" data-set-lang="zh">中文</button>
           <button type="button" data-set-lang="en">EN</button>
@@ -485,21 +485,21 @@
     </div>
 
     <section id="top" class="hero-inner">
-      <p class="eyebrow">v0.3.0 · local-first · contract-driven</p>
+      <p class="eyebrow">v0.4.0 · template-driven · schedule-linked</p>
       <h1 class="zh">结构化作业通知工作台</h1>
       <h1 class="en">Structured Operations Notice Workbench</h1>
-      <p class="lead zh">把 CSV 或 JSON work package 转换成可审核的 Excel、网页预览、manifest 和 agent context。公开版面向制造、仓储、维修、现场服务和合规审查，默认本地运行，默认人工放行。</p>
-      <p class="lead en">Convert CSV or JSON work packages into review-ready Excel, browser previews, manifests, and agent context. Built for manufacturing, warehouse, maintenance, service, and compliance workflows with local-first defaults.</p>
+      <p class="lead zh">从模板、排产计划、CSV 或 JSON 自动生成生产通知单和作业发布包。内置常用字段预设，支持自定义字段和自制模板，公开样例全部为脱敏生产风格数据。</p>
+      <p class="lead en">Generate production notices and release packets from templates, schedule plans, CSV, or JSON. Built-in presets cover common fields while custom fields and user-owned templates stay configurable.</p>
       <div class="hero-actions">
         <a class="button primary" href="https://github.com/Felix-Zuo/factory-production-notice-agent">GitHub Repo</a>
-        <a class="button" href="https://github.com/Felix-Zuo/factory-production-notice-agent/releases/tag/v0.3.0">v0.3.0 Release</a>
-        <a class="button" href="#product">View Product Surface</a>
+        <a class="button" href="https://github.com/Felix-Zuo/factory-production-notice-agent/releases/tag/v0.4.0">v0.4.0 Release</a>
+        <a class="button" href="#workflow">Schedule Linkage</a>
       </div>
       <div class="proof-strip">
-        <div class="proof-item"><strong>CSV + JSON</strong><span class="zh">表格导入和标准契约共用同一验证链路。</span><span class="en">Tabular imports and JSON contracts share one validation path.</span></div>
-        <div class="proof-item"><strong>5 Profiles</strong><span class="zh">内置五类通用作业场景。</span><span class="en">Five built-in operations scenario families.</span></div>
-        <div class="proof-item"><strong>CI Gate</strong><span class="zh">测试、导入、验证、生成和打包检查自动覆盖。</span><span class="en">Tests, import, validation, generation, and package checks.</span></div>
-        <div class="proof-item"><strong>Safe Local API</strong><span class="zh">演示服务默认只绑定 loopback。</span><span class="en">The demo server binds to loopback by default.</span></div>
+        <div class="proof-item"><strong>Production Notice</strong><span class="zh">脱敏生产通知单样例可直接生成 Excel 和网页预览。</span><span class="en">Masked production-style notices generate Excel and browser previews.</span></div>
+        <div class="proof-item"><strong>Schedule Linkage</strong><span class="zh">排产计划可自动生成请求、通知单和 manifest。</span><span class="en">Schedule plans create requests, notices, and manifests.</span></div>
+        <div class="proof-item"><strong>Templates</strong><span class="zh">内置模板覆盖常用字段，也支持自制模板。</span><span class="en">Built-in presets cover common fields and custom templates.</span></div>
+        <div class="proof-item"><strong>CI Gate</strong><span class="zh">模板、排产、导入、生成和打包检查自动覆盖。</span><span class="en">Templates, schedules, import, generation, and packaging are checked.</span></div>
       </div>
     </section>
   </header>
@@ -507,22 +507,22 @@
   <main>
     <section id="product" class="section">
       <div class="section-head">
-        <h2 class="zh">真实产品输出，而不是静态概念图</h2>
-        <h2 class="en">Real Product Output, Not A Static Concept</h2>
-        <p class="zh">展示页首要展示真实生成物：通知预览、合同化接口、发布 manifest 和下游 agent context。</p>
-        <p class="en">The showcase leads with generated artifacts: notice preview, contract surface, release manifest, and downstream agent context.</p>
+        <h2 class="zh">脱敏生产通知单，字段完整可落地</h2>
+        <h2 class="en">Masked Production Notice With Usable Fields</h2>
+        <p class="zh">截图来自实际生成的生产通知单，包含工单、物料、工序、履约、控制点、排产字段和自定义字段。</p>
+        <p class="en">The screenshot is generated from a production-style notice with work order, resources, steps, fulfillment, controls, schedule fields, and custom fields.</p>
       </div>
       <div class="artifact">
         <div class="artifact-visual">
           <img src="assets/screenshots/notice-output.png" alt="Generated operations notice preview">
         </div>
         <div class="stack">
-          <div class="panel kpi"><strong>4</strong><span class="zh">每次生成固定输出四类产物：xlsx、html、manifest、agent context。</span><span class="en">Each run emits four stable artifacts: xlsx, html, manifest, and agent context.</span></div>
-          <div class="panel kpi"><strong>0</strong><span class="zh">默认不依赖外部服务；公开样例全是合成数据。</span><span class="en">No external service dependency by default; public samples are synthetic.</span></div>
-          <div class="panel kpi"><strong>1 MB</strong><span class="zh">本地 API 有请求体限制，并默认拒绝非 loopback 绑定。</span><span class="en">The local API caps request size and rejects non-loopback binding by default.</span></div>
+          <div class="panel kpi"><strong>4</strong><span class="zh">每次生成固定输出四类产物：xlsx、html、manifest、workflow context。</span><span class="en">Each run emits four stable artifacts: xlsx, html, manifest, and workflow context.</span></div>
+          <div class="panel kpi"><strong>7</strong><span class="zh">生产样例内置排产字段：计划号、线体、班次、开始、结束、产能状态、发布批次。</span><span class="en">The production sample includes schedule ID, line, shift, slot, capacity, and release bucket fields.</span></div>
+          <div class="panel kpi"><strong>5</strong><span class="zh">内置五类模板，可继续加载自制模板文件。</span><span class="en">Five built-in templates can be extended with user-owned template files.</span></div>
           <div class="panel">
-            <p class="body-copy zh">界面语言刻意偏“操作系统工具”：少装饰，强信息密度，突出可运行命令、产物边界和安全默认值。</p>
-            <p class="body-copy en">The interface deliberately feels like an operations tool: restrained styling, high information density, runnable commands, artifact boundaries, and safety defaults.</p>
+            <p class="body-copy zh">页面展示的是可运行功能：模板生成请求、排产生成通知单、生成 Excel 和预览，不是只写在文档里的概念。</p>
+            <p class="body-copy en">This page shows runnable capabilities: template request creation, schedule-linked generation, Excel output, and browser preview.</p>
           </div>
         </div>
       </div>
@@ -530,31 +530,31 @@
 
     <section id="workflow" class="section">
       <div class="section-head">
-        <h2 class="zh">从工作包到发布包</h2>
-        <h2 class="en">From Work Package To Release Packet</h2>
-        <p class="zh">流程区参考优秀自动化平台的表达方式：先讲路径，再讲扩展点，最后讲安全门禁。</p>
-        <p class="en">The workflow section follows strong automation pages: path first, extension points next, safety gates last.</p>
+        <h2 class="zh">排产联动自动生成</h2>
+        <h2 class="en">Schedule-Linked Generation</h2>
+        <p class="zh">排产计划写入线体、班次、时间窗、产能状态和序号，生成器会把这些字段带入通知单和 manifest。</p>
+        <p class="en">The schedule plan carries line, shift, time window, capacity status, and sequence into notice artifacts and the schedule manifest.</p>
       </div>
       <div class="flow">
-        <div class="flow-step"><small>01</small><strong>Profile</strong><span class="zh">选择制造、仓储、维修、现场服务或审查语义。</span><span class="en">Select manufacturing, warehouse, maintenance, service, or review semantics.</span></div>
-        <div class="flow-step"><small>02</small><strong>Import</strong><span class="zh">CSV 行按 notice_id 聚合为标准 JSON。</span><span class="en">CSV rows are grouped by notice_id into standard JSON.</span></div>
-        <div class="flow-step"><small>03</small><strong>Validate</strong><span class="zh">检查必填字段、数字、布尔值和嵌套结构。</span><span class="en">Validate required fields, numbers, booleans, and nested structure.</span></div>
-        <div class="flow-step"><small>04</small><strong>Generate</strong><span class="zh">输出 Excel、HTML、manifest 和 agent context。</span><span class="en">Emit Excel, HTML, manifest, and agent context.</span></div>
-        <div class="flow-step"><small>05</small><strong>Review</strong><span class="zh">真实作业放行保留给人工审批。</span><span class="en">Real operational release stays behind human approval.</span></div>
+        <div class="flow-step"><small>01</small><strong>Template</strong><span class="zh">选择 production-release 或加载自制模板。</span><span class="en">Select production-release or load a custom template.</span></div>
+        <div class="flow-step"><small>02</small><strong>Schedule</strong><span class="zh">读取排产计划中的线体、班次和时间窗。</span><span class="en">Read line, shift, and time window from the schedule plan.</span></div>
+        <div class="flow-step"><small>03</small><strong>Fields</strong><span class="zh">合并预设字段、排产字段和自定义字段。</span><span class="en">Merge preset, schedule, and custom fields.</span></div>
+        <div class="flow-step"><small>04</small><strong>Generate</strong><span class="zh">生成请求 JSON、通知单、预览和 manifest。</span><span class="en">Generate request JSON, notice, preview, and manifest.</span></div>
+        <div class="flow-step"><small>05</small><strong>Review</strong><span class="zh">真实作业放行保留给人工审批。</span><span class="en">Operational release stays behind human approval.</span></div>
       </div>
     </section>
 
     <section class="section split">
       <div>
-        <h2 class="zh">开发者入口清晰</h2>
-        <h2 class="en">Clear Developer Entry</h2>
-        <p class="body-copy zh">顶尖开源项目的主页会让访问者立刻知道如何运行、如何验证、如何判断项目是否可信。这里把最短路径直接放在展示页。</p>
-        <p class="body-copy en">Strong open-source product pages show how to run, verify, and trust the project quickly. This page puts the shortest path in view.</p>
+        <h2 class="zh">模板、字段、排产都能直接运行</h2>
+        <h2 class="en">Templates, Fields, And Schedule Plans Are Runnable</h2>
+        <p class="body-copy zh">内置模板可直接生成请求；自定义字段可以通过命令追加，也可以写进自制模板；排产计划可批量生成通知单。</p>
+        <p class="body-copy en">Built-in templates create requests directly. Custom fields can be added by command or stored in custom templates. Schedule plans generate notices in batch.</p>
       </div>
-      <div class="terminal">operations-notice profiles
-operations-notice import-csv --input sample_data/csv/work_package_notices.csv --output-dir output/imported
-operations-notice validate --input output/imported/ON-2026-CSV-001.json
-operations-notice generate --input output/imported/ON-2026-CSV-001.json --output output</div>
+      <div class="terminal">operations-notice templates
+operations-notice new-from-template --template production-release --output output/production_request.json --custom-field release_owner=Planning
+operations-notice schedule-generate --input sample_data/scheduling_plan.json --output output/scheduled_release
+operations-notice generate --input sample_data/production_notice_request.json --output output</div>
     </section>
 
     <section class="section">
@@ -575,16 +575,16 @@ operations-notice generate --input output/imported/ON-2026-CSV-001.json --output
 
     <section id="evidence" class="section">
       <div class="section-head">
-        <h2 class="zh">公开仓库成熟度证据</h2>
-        <h2 class="en">Public Repository Maturity Evidence</h2>
-        <p class="zh">展示页不只讲能力，也直接交代项目的质量边界、发布记录和维护材料。</p>
-        <p class="en">The page documents not only capability, but quality boundaries, releases, and maintenance materials.</p>
+        <h2 class="zh">维护证据和质量边界</h2>
+        <h2 class="en">Maintenance Evidence And Quality Boundaries</h2>
+        <p class="zh">公开页面不堆概念，直接展示可验证的质量链路：样例、模板、排产、CI、发布记录和安全默认值。</p>
+        <p class="en">The page emphasizes verifiable product evidence: samples, templates, schedules, CI, releases, and safety defaults.</p>
       </div>
       <div class="evidence-grid">
-        <article class="evidence"><strong>Validation Surface</strong><p class="zh">CLI、CSV 适配器、模型解析和 HTTP API 共用验证语义。</p><p class="en">CLI, CSV adapter, model parser, and HTTP API share validation semantics.</p></article>
+        <article class="evidence"><strong>Validation Surface</strong><p class="zh">CLI、CSV、模板、排产和 HTTP API 共用验证语义。</p><p class="en">CLI, CSV, templates, schedules, and HTTP API share validation semantics.</p></article>
         <article class="evidence"><strong>Spreadsheet Safety</strong><p class="zh">Excel 写入前处理公式型文本和控制字符，降低公开 demo 风险。</p><p class="en">Formula-like text and control characters are handled before Excel export.</p></article>
         <article class="evidence"><strong>Release Hygiene</strong><p class="zh">发布记录、changelog、roadmap、issue template 和 support 文档保持可追溯。</p><p class="en">Releases, changelog, roadmap, issue templates, and support docs are traceable.</p></article>
-        <article class="evidence"><strong>CI Package Gate</strong><p class="zh">CI 覆盖测试、样例验证、CSV 导入、生成和发布包内容检查。</p><p class="en">CI covers tests, sample validation, CSV import, generation, and package checks.</p></article>
+        <article class="evidence"><strong>CI Package Gate</strong><p class="zh">CI 覆盖测试、生产样例、模板、排产、CSV、生成和发布包内容检查。</p><p class="en">CI covers tests, production samples, templates, schedules, CSV, generation, and package checks.</p></article>
       </div>
     </section>
 
@@ -598,7 +598,7 @@ operations-notice generate --input output/imported/ON-2026-CSV-001.json --output
           <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/README.md"><strong>README</strong><span>Fresh checkout workflow</span></a>
           <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/docs/QUALITY.md"><strong>Quality</strong><span>Safety and validation notes</span></a>
           <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/ROADMAP.md"><strong>Roadmap</strong><span>Public product direction</span></a>
-          <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/agent_interface.json"><strong>Agent Contract</strong><span>Machine-readable capabilities</span></a>
+          <a class="link-tile" href="https://github.com/Felix-Zuo/factory-production-notice-agent/blob/main/agent_interface.json"><strong>Automation Contract</strong><span>Machine-readable capabilities</span></a>
         </div>
       </div>
       <img src="assets/screenshots/agent-contract.png" alt="Automation contract preview">
@@ -606,7 +606,7 @@ operations-notice generate --input output/imported/ON-2026-CSV-001.json --output
   </main>
 
   <footer>
-    Structured Operations Notice Agent · local-first public showcase · synthetic data only
+    Structured Operations Notice Agent · local-first public showcase · masked sample data only
   </footer>
 
   <script>

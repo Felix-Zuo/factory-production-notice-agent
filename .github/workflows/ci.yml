@@ -23,17 +23,23 @@ jobs:
       - name: Validate sample payloads
         run: |
           operations-notice profiles
+          operations-notice templates
           operations-notice validate --input sample_data/demo_notice_request.json
+          operations-notice validate --input sample_data/production_notice_request.json
           operations-notice validate --input sample_data/legacy_manufacturing_notice_request.json
           operations-notice validate --input sample_data/maintenance_notice_request.json
           operations-notice import-csv --input sample_data/csv/work_package_notices.csv --output-dir output_ci_imported
           operations-notice validate --input output_ci_imported/ON-2026-CSV-001.json
           operations-notice validate --input output_ci_imported/ON-2026-CSV-002.json
+          operations-notice new-from-template --template production-release --output output_ci_imported/template_notice.json --set notice_id=PN-CI-TEMPLATE --set quantity=24 --custom-field release_owner=Planning
+          operations-notice validate --input output_ci_imported/template_notice.json
       - name: Generate demo artifacts
         run: |
           operations-notice generate --input sample_data/demo_notice_request.json --output output_ci_demo
+          operations-notice generate --input sample_data/production_notice_request.json --output output_ci_demo
           operations-notice generate --input sample_data/maintenance_notice_request.json --output output_ci_demo
           operations-notice generate --input output_ci_imported/ON-2026-CSV-001.json --output output_ci_demo
+          operations-notice schedule-generate --input sample_data/scheduling_plan.json --output output_ci_schedule
       - name: Verify release package
         run: |
           python scripts/package_project.py --output output_ci_package

@@ -1,14 +1,17 @@
 {
   "name": "factory-production-notice-agent",
-  "version": "0.3.0",
-  "description": "Generate operations notice workbooks from structured JSON or CSV work-package requests.",
+  "version": "0.4.0",
+  "description": "Generate production and operations notice workbooks from JSON, CSV, templates, or schedule plans.",
   "public_positioning": "Local-first notice generator for manufacturing, warehouse, maintenance, service, and other repeatable operations workflows.",
   "input_contract": {
     "format": "json",
     "schema_path": "config/notice_schema.json",
     "sample_path": "sample_data/demo_notice_request.json",
+    "production_sample_path": "sample_data/production_notice_request.json",
     "csv_sample_path": "sample_data/csv/work_package_notices.csv",
-    "scenario_profile_path": "config/scenario_profiles.json"
+    "scenario_profile_path": "config/scenario_profiles.json",
+    "template_path": "config/notice_templates.json",
+    "schedule_sample_path": "sample_data/scheduling_plan.json"
   },
   "supported_domains": [
     "manufacturing release",
@@ -20,7 +23,7 @@
   "capabilities": [
     {
       "name": "generate_operations_notice",
-      "description": "Create a styled operations notice workbook, HTML preview, manifest, and agent context.",
+      "description": "Create a styled operations notice workbook, HTML preview, manifest, and workflow context.",
       "cli": "python -m factory_production_notice.cli generate --input sample_data/demo_notice_request.json --output output",
       "http": {
         "method": "POST",
@@ -77,17 +80,48 @@
       ]
     },
     {
+      "name": "list_notice_templates",
+      "description": "List built-in and optional custom notice templates with field presets.",
+      "cli": "python -m factory_production_notice.cli templates",
+      "outputs": [
+        "template_catalog.json"
+      ]
+    },
+    {
+      "name": "create_notice_from_template",
+      "description": "Create an editable notice request from a built-in or user-owned template.",
+      "cli": "python -m factory_production_notice.cli new-from-template --template production-release --output output/production_request.json",
+      "outputs": [
+        "notice_request.json"
+      ]
+    },
+    {
+      "name": "generate_from_schedule",
+      "description": "Convert a schedule plan into notice request JSON files and generated notice artifacts.",
+      "cli": "python -m factory_production_notice.cli schedule-generate --input sample_data/scheduling_plan.json --output output/scheduled_release",
+      "outputs": [
+        "schedule_manifest.json",
+        "notice_request.json",
+        "xlsx",
+        "html",
+        "manifest.json",
+        "agent_context.json"
+      ]
+    },
+    {
       "name": "export_agent_context",
-      "description": "Convert a notice request into a structured context payload for downstream analysis agents.",
+      "description": "Convert a notice request into a structured workflow context payload.",
       "cli": "python -m factory_production_notice.cli analysis-context --input sample_data/demo_notice_request.json --output output/analysis_context.json"
     }
   ],
   "workflow": [
     "Select a scenario profile or import a CSV work package",
+    "Apply a built-in or user-owned template when a preset is needed",
+    "Optionally generate notice requests and artifacts from a schedule plan",
     "Convert the input into the standard operations notice request",
     "Validate required subject, quantity, due date, resource, step, fulfillment, and control fields",
     "Generate workbook and preview artifacts",
-    "Return manifest and structured agent context",
+    "Return manifest and structured workflow context",
     "Let a human reviewer approve release before sending the notice into the live workflow"
   ],
   "safety_notes": [

@@ -77,6 +77,54 @@ class RoutingStep:
 
 
 @dataclass
+class CustomField:
+    key: str
+    label: str
+    value: str
+    group: str = "Custom"
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "CustomField":
+        key = str(payload.get("key") or "").strip()
+        if not key:
+            raise NoticeValidationError("custom_fields entries require a key")
+        return cls(
+            key=key,
+            label=str(payload.get("label") or labelize(key)).strip(),
+            value=str(payload.get("value", "")).strip(),
+            group=str(payload.get("group") or "Custom").strip() or "Custom",
+        )
+
+    def as_dict(self) -> dict[str, str]:
+        return {
+            "key": self.key,
+            "label": self.label,
+            "value": self.value,
+            "group": self.group,
+        }
+
+
+def labelize(value: str) -> str:
+    return " ".join(part.capitalize() for part in value.replace("-", "_").split("_") if part) or value
+
+
+def parse_custom_fields(payload: Any) -> list[CustomField]:
+    if payload in (None, ""):
+        return []
+    if isinstance(payload, dict):
+        return [
+            CustomField(key=str(key), label=labelize(str(key)), value="" if value is None else str(value), group="Custom")
+            for key, value in payload.items()
+            if str(key).strip()
+        ]
+    if isinstance(payload, list):
+        if any(not isinstance(item, dict) for item in payload):
+            raise NoticeValidationError("custom_fields entries must be objects")
+        return [CustomField.from_dict(item) for item in payload]
+    raise NoticeValidationError("custom_fields must be an object or an array")
+
+
+@dataclass
 class ProductionNotice:
     notice_id: str
     work_order: str
@@ -94,6 +142,7 @@ class ProductionNotice:
     packaging: dict[str, Any] = field(default_factory=dict)
     quality: dict[str, Any] = field(default_factory=dict)
     notes: list[str] = field(default_factory=list)
+    custom_fields: list[CustomField] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "ProductionNotice":
@@ -140,6 +189,7 @@ class ProductionNotice:
         notes_payload = payload.get("notes", [])
         if not isinstance(notes_payload, list):
             raise NoticeValidationError("notes must be an array")
+        custom_fields = parse_custom_fields(payload.get("custom_fields", []))
 
         return cls(
             notice_id=notice_id,
@@ -158,6 +208,7 @@ class ProductionNotice:
             packaging=dict(packaging_payload),
             quality=dict(quality_payload),
             notes=[str(item) for item in notes_payload],
+            custom_fields=custom_fields,
         )
 
     def to_agent_context(self) -> dict[str, Any]:
@@ -204,6 +255,8 @@ class ProductionNotice:
             "quality": self.quality,
             "fulfillment": self.packaging,
             "packaging": self.packaging,
+            "custom_fields": [field.as_dict() for field in self.custom_fields],
+            "custom_field_values": {field.key: field.value for field in self.custom_fields},
             "agent_recommended_checks": [
                 "Validate required resources before releasing the notice",
                 "Confirm step ownership and capacity against the due date",

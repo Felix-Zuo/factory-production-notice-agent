@@ -137,6 +137,7 @@ def build_workbook(notice: ProductionNotice) -> Workbook:
     current = write_materials(ws, notice, current, section_fill, border)
     current = write_routing(ws, notice, current + 1, section_fill, border)
     current = write_packaging_quality(ws, notice, current + 1, section_fill, border)
+    current = write_custom_fields(ws, notice, current + 1, section_fill, border)
     write_notes(ws, notice, current + 1, section_fill, border)
 
     for row in ws.iter_rows():
@@ -220,6 +221,24 @@ def write_packaging_quality(ws, notice: ProductionNotice, start: int, fill: Patt
     return row
 
 
+def write_custom_fields(ws, notice: ProductionNotice, start: int, fill: PatternFill, border: Border) -> int:
+    if not notice.custom_fields:
+        return start - 1
+    write_section_header(ws, start, "Template and Schedule Fields", fill)
+    headers = ["Group", "Field", "Value", "", "", "", "", ""]
+    for col, value in enumerate(headers, start=1):
+        cell = write_cell(ws, start + 1, col, value)
+        cell.font = Font(bold=True)
+        cell.border = border
+    row = start + 2
+    for custom in notice.custom_fields:
+        values = [custom.group, custom.label, custom.value, "", "", "", "", ""]
+        for col, value in enumerate(values, start=1):
+            write_cell(ws, row, col, value).border = border
+        row += 1
+    return row
+
+
 def write_notes(ws, notice: ProductionNotice, start: int, fill: PatternFill, border: Border) -> int:
     write_section_header(ws, start, "Release Notes", fill)
     row = start + 1
@@ -246,6 +265,7 @@ def render_html(notice: ProductionNotice) -> str:
     checks = ", ".join(str(item) for item in control_checks)
     html_notes = notice.notes or ["Review and approve before releasing to operations."]
     notes = "\n".join(f"<li>{esc(note)}</li>" for note in html_notes)
+    custom_section = render_custom_fields(notice)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -385,6 +405,7 @@ def render_html(notice: ProductionNotice) -> str:
           </div>
         </div>
       </section>
+      {custom_section}
       <h2>Release Notes</h2>
       <ul>{notes}</ul>
       <section class="approval">
@@ -397,6 +418,19 @@ def render_html(notice: ProductionNotice) -> str:
   </main>
 </body>
 </html>
+"""
+
+
+def render_custom_fields(notice: ProductionNotice) -> str:
+    if not notice.custom_fields:
+        return ""
+    rows = "\n".join(
+        f"<tr><td>{esc(custom.group)}</td><td>{esc(custom.label)}</td><td>{esc(custom.value)}</td></tr>"
+        for custom in notice.custom_fields
+    )
+    return f"""
+      <h2>Template and Schedule Fields</h2>
+      <table><thead><tr><th>Group</th><th>Field</th><th>Value</th></tr></thead><tbody>{rows}</tbody></table>
 """
 
 

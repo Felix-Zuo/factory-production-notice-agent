@@ -54,6 +54,24 @@
     "packaging": {"type": "object"},
     "controls": {"type": "object"},
     "quality": {"type": "object"},
-    "notes": {"type": "array"}
+    "notes": {"type": "array"},
+    "custom_fields": {
+      "oneOf": [
+        {"type": "object"},
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "key": {"type": "string"},
+              "label": {"type": "string"},
+              "value": {},
+              "group": {"type": "string"}
+            }
+          }
+        }
+      ]
+    }
   }
 }

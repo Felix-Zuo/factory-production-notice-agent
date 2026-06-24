@@ -8,6 +8,10 @@ This document captures the practical checks that keep the public demo stable.
 - The CSV adapter limits row count and cell length before conversion.
 - CSV imports validate required fields, booleans, numbers, and the normalized
   notice payload before writing generated request files.
+- Template-generated and schedule-generated requests are validated through the
+  same notice model before artifacts are written.
+- Custom fields are rendered through the same HTML escaping and Excel-safe cell
+  writing paths as standard fields.
 - Generated HTML escapes user-provided values before rendering.
 - Generated Excel cells escape formula-like text before writing workbook cells.
 - The demo HTTP server refuses non-loopback hosts unless `--allow-remote` is
@@ -21,7 +25,9 @@ This document captures the practical checks that keep the public demo stable.
 ```powershell
 operations-notice validate --input sample_data\demo_notice_request.json
 operations-notice profiles
+operations-notice templates
 operations-notice import-csv --input sample_data\csv\work_package_notices.csv --output-dir output_import_probe
+operations-notice schedule-generate --input sample_data\scheduling_plan.json --output output_schedule_probe
 python -m pytest -q
 python scripts\package_project.py --output output_package_probe
 python scripts\verify_package.py output_package_probe\factory-production-notice-agent.zip

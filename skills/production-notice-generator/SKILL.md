@@ -18,10 +18,18 @@ For tabular work-package exports, import CSV rows first:
 python -m factory_production_notice.cli import-csv --input sample_data\csv\work_package_notices.csv --output-dir output\imported
 ```
 
+For preset-driven requests or schedule-linked releases, use:
+
+```powershell
+python -m factory_production_notice.cli new-from-template --template production-release --output output\production_request.json
+python -m factory_production_notice.cli schedule-generate --input sample_data\scheduling_plan.json --output output\scheduled_release
+```
+
 ## Run
 
 ```powershell
 python -m factory_production_notice.cli profiles
+python -m factory_production_notice.cli templates
 python -m factory_production_notice.cli validate --input sample_data\demo_notice_request.json
 python -m factory_production_notice.cli generate --input sample_data\demo_notice_request.json --output output
 ```

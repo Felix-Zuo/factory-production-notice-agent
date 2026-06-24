@@ -1,0 +1,54 @@
+{
+  "notice_id": "PN-2026-LINEA-0624-01",
+  "notice_type": "Production Notice",
+  "domain": "manufacturing-release",
+  "work_order": "WO-MFG-260624-A01",
+  "requester": "Planning Control",
+  "priority": "high",
+  "quantity": 96,
+  "quantity_unit": "sets",
+  "due_date": "2026-06-27",
+  "issuer": "Production Control",
+  "subject": {
+    "subject_id": "DRV-CTRL-220",
+    "name": "Drive Control Cabinet",
+    "category": "electrical assembly",
+    "revision": "R3"
+  },
+  "resources": [
+    {"resource_id": "RM-CAB-220", "name": "Cabinet Housing", "quantity_per": 1, "unit": "pcs", "source": "Sheet Metal Store"},
+    {"resource_id": "RM-PLC-014", "name": "PLC Control Kit", "quantity_per": 1, "unit": "set", "source": "Electronics Store"},
+    {"resource_id": "RM-HAR-220", "name": "Harness Pack", "quantity_per": 1, "unit": "set", "source": "Line-side Supermarket"},
+    {"resource_id": "LBL-TRACE-030", "name": "Traceability Label", "quantity_per": 1, "unit": "pcs", "source": "Print Station"}
+  ],
+  "steps": [
+    {"step": "OP10", "owner": "Assembly Line A", "instruction": "Install cabinet housing and DIN rail components", "target_time_min": 16},
+    {"step": "OP20", "owner": "Electrical Bench", "instruction": "Wire PLC kit and harness pack by revision R3 routing", "target_time_min": 22},
+    {"step": "OP30", "owner": "Test Bench", "instruction": "Run power-on and IO verification", "target_time_min": 14},
+    {"step": "OP40", "owner": "Packaging", "instruction": "Apply traceability label and release to finished-goods staging", "target_time_min": 8}
+  ],
+  "fulfillment": {
+    "method": "Line-side release plus finished-goods staging",
+    "units_per_container": 8,
+    "containers_per_batch": 12,
+    "label_rule": "Work order, revision, serial range, line, and slot on each container"
+  },
+  "controls": {
+    "approval_required": true,
+    "review_rule": "First-off approval at OP20 and final sample review at OP30",
+    "critical_controls": ["revision match", "PLC kit scan", "IO test result", "serial traceability"]
+  },
+  "custom_fields": [
+    {"key": "schedule_id", "label": "Schedule ID", "value": "SCH-2026-W26-A", "group": "Schedule"},
+    {"key": "line", "label": "Production Line", "value": "Assembly Line A", "group": "Schedule"},
+    {"key": "shift", "label": "Shift", "value": "Day", "group": "Schedule"},
+    {"key": "slot_start", "label": "Slot Start", "value": "2026-06-25 08:00", "group": "Schedule"},
+    {"key": "slot_end", "label": "Slot End", "value": "2026-06-25 14:00", "group": "Schedule"},
+    {"key": "capacity_status", "label": "Capacity Status", "value": "confirmed", "group": "Schedule"},
+    {"key": "release_bucket", "label": "Release Bucket", "value": "W26-A", "group": "Planning"}
+  ],
+  "notes": [
+    "Release materials only after R3 revision confirmation.",
+    "This public sample uses masked production-style records and does not contain private factory data."
+  ]
+}

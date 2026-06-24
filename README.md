@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Local-first work-package workbench for teams that need a repeatable notice,
-review, and release workflow. The repository keeps the original
+review, scheduling, and release workflow. The repository keeps the original
 `factory-production-notice-agent` name for continuity, but the public contract is
 now generic enough for manufacturing release, warehouse fulfillment,
 maintenance, field service, and compliance review scenarios.
@@ -15,8 +15,11 @@ maintenance, field service, and compliance review scenarios.
 ## What It Does
 
 - Turns a structured JSON request into an Excel workbook, browser preview,
-  manifest, and agent-readable context.
+  manifest, and workflow-readable context.
 - Converts tabular CSV work-package exports into validated notice request JSON.
+- Creates editable requests from built-in or user-owned notice templates.
+- Converts a schedule plan into production notice requests and generated
+  artifacts.
 - Ships built-in scenario profiles for warehouse, manufacturing, maintenance,
   field dispatch, and compliance review workflows.
 - Supports generic `subject`, `resources`, `steps`, `fulfillment`, and
@@ -30,6 +33,7 @@ maintenance, field service, and compliance review scenarios.
 
 ```powershell
 python -m factory_production_notice.cli profiles
+python -m factory_production_notice.cli templates
 python -m factory_production_notice.cli import-csv --input sample_data\csv\work_package_notices.csv --output-dir output\imported
 python -m factory_production_notice.cli validate --input output\imported\ON-2026-CSV-001.json
 python -m factory_production_notice.cli generate --input output\imported\ON-2026-CSV-001.json --output output
@@ -39,9 +43,25 @@ The CSV adapter is intentionally conservative: it limits row and cell sizes,
 validates booleans and numbers, groups rows by `notice_id`, and writes one JSON
 request per notice for downstream generation.
 
+Template-driven production notice:
+
+```powershell
+python -m factory_production_notice.cli new-from-template --template production-release --output output\production_request.json --set notice_id=PN-DEMO-001 --custom-field release_owner=Planning
+python -m factory_production_notice.cli generate --input output\production_request.json --output output
+```
+
+Schedule-linked generation:
+
+```powershell
+python -m factory_production_notice.cli schedule-generate --input sample_data\scheduling_plan.json --output output\scheduled_release
+```
+
+Custom templates use the same format as `config\notice_templates.json`; see
+`sample_data\custom_templates\custom_fixture_template.json` for an example.
+
 ## Public Demo Contract
 
-The preferred v0.3 contract is intentionally cross-domain:
+The preferred v0.4 contract is intentionally cross-domain:
 
 ```json
 {
@@ -55,7 +75,8 @@ The preferred v0.3 contract is intentionally cross-domain:
   "resources": [],
   "steps": [],
   "fulfillment": {},
-  "controls": {}
+  "controls": {},
+  "custom_fields": {}
 }
 ```
 
@@ -107,7 +128,10 @@ Additional synthetic scenarios:
 ```text
 sample_data\legacy_manufacturing_notice_request.json
 sample_data\maintenance_notice_request.json
+sample_data\production_notice_request.json
+sample_data\scheduling_plan.json
 sample_data\csv\work_package_notices.csv
+sample_data\custom_templates\custom_fixture_template.json
 ```
 
 ## Local API
@@ -126,14 +150,14 @@ POST /api/generate-operations-notice
 `/api/generate-notice` remains for compatibility. New integrations should use
 `/api/generate-operations-notice`.
 
-## Agent Contract
+## Automation Contract
 
 ```powershell
 python -m factory_production_notice.cli agent-spec --output output\agent_interface.json
 python -m factory_production_notice.cli analysis-context --input sample_data\demo_notice_request.json --output output\analysis_context.json
 ```
 
-![Agent contract](docs/assets/agent-interface.svg)
+![Automation contract](docs/assets/agent-interface.svg)
 
 ## Validation
 
